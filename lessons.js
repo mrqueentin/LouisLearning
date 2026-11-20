@@ -8,7 +8,8 @@
 window.VH_LESSONS = [
   { subject: "english", unit: 5, title: "Theme Park", desc: "Nghề nghiệp, nơi ở, quốc tịch · was/were",
     icon: "🎡", color: "#ff5a5f", file: "unit5.html", saveKey: "u5park.v1", games: 7 },
-  // { subject: "english", unit: 6, title: "abc", desc: "…", icon: "📘", color: "#2f80ed", file: "unit6.html", saveKey: "u6.v1", games: 6 },
+  { subject: "english", unit: 6, title: "My School", desc: "Phòng học, chỉ đường, lớp tiếng Anh · Where is…?",
+    icon: "🏫", color: "#2f80ed", file: "unit6.html", saveKey: "u6school.v1", games: 9 },
   // { subject: "math", unit: 1, title: "xyz", desc: "…", icon: "➕", color: "#2f80ed", file: "math1.html", saveKey: "m1.v1", games: 5 },
 ];
 
