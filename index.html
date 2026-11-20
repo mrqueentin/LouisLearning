@@ -1,758 +1,83 @@
 <!doctype html>
-<html lang="en">
+<html lang="vi">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-</head>
-<body>
-<title>Unit 5 Theme Park</title>
-<meta name="claude:viewport-fit-sides" content="cover">
+<title>Vui Học</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@500;700;800&display=swap">
 <style>
-/* Layout: one-column "park ticket" app, max 720px, rides as big tappable cards; single bright daytime look */
 :root{
-  --sky:#bfe8ff; --sky2:#e9f7ff; --grass:#7ccf6b;
+  --sky:#bfe6ff; --sky2:#e9f7ff;
   --ink:#1d2a44; --muted:#55627d; --card:#ffffff; --line:#d7e3f2;
-  --red:#ff5a5f; --orange:#ff9f1c; --yellow:#ffd23f; --green:#2bb673; --blue:#2f80ed; --purple:#8e5cf7; --pink:#ff6fb5;
-  --ok:#22a861; --okbg:#dcf7e8; --bad:#e5484d; --badbg:#ffe3e3;
-  --display:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
-  --body:"Nunito","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;
-  color-scheme:light;
+  --red:#ff5a5f; --orange:#ff9f1c; --yellow:#ffd23f; --green:#2bb673; --blue:#2f80ed; --purple:#8e5cf7;
+  --display:'Baloo 2',system-ui,sans-serif; --body:'Nunito',system-ui,sans-serif;
 }
 *{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0;background:linear-gradient(180deg,var(--sky) 0%,var(--sky2) 55%,#f4fbe9 100%) fixed;background-color:var(--sky2);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.45;-webkit-tap-highlight-color:transparent;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 28px}
-#app{max-width:720px;margin:0 auto}
-button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
-button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
-h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.1}
-
-/* ---------- Home ---------- */
-.bunting{display:flex;justify-content:space-between;gap:4px;margin:0 0 6px;height:22px;overflow:hidden}
-.bunting i{flex:1;max-width:34px;height:22px;clip-path:polygon(0 0,100% 0,50% 100%)}
-.hero{text-align:center;padding:6px 0 10px}
-.hero h1{font-size:clamp(2rem,7vw,3rem);font-weight:800;color:var(--ink);letter-spacing:-.5px}
+html,body{min-height:100%}
+body{margin:0;background:linear-gradient(180deg,var(--sky) 0%,var(--sky2) 55%,#f4fbe9 100%) fixed;background-color:var(--sky2);
+  color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.45;-webkit-tap-highlight-color:transparent;
+  padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.wrap{max-width:720px;margin:0 auto}
+.bunting{display:flex;justify-content:space-between;margin:0 -4px 6px}
+.bunting i{width:6%;aspect-ratio:1/1.1;clip-path:polygon(0 0,100% 0,50% 100%)}
+.hero{text-align:center;margin:10px 0 24px}
+.hero h1{font-family:var(--display);font-size:clamp(2.2rem,9vw,3.4rem);font-weight:800;margin:0;line-height:1.05;letter-spacing:-.5px}
 .hero h1 span{color:var(--red)}
-.hero p{margin:4px 0 0;color:var(--muted);font-weight:700}
-.ticket{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--card);border:3px dashed var(--orange);border-radius:18px;padding:12px 14px;margin:8px 0 14px}
-.ticket label{font-weight:800}
-.ticket input{flex:1;min-width:0;font:inherit;font-weight:800;padding:8px 12px;border-radius:12px;border:2px solid var(--line);background:#fbfdff;color:var(--ink)}
-.ticket .total{font-family:var(--display);font-size:1.4rem;font-weight:800;white-space:nowrap}
-.rides{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.ride{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;padding:14px;border-radius:20px;background:var(--card);box-shadow:0 5px 0 rgba(29,42,68,.14);border:3px solid transparent;transition:transform .12s}
-.ride:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(29,42,68,.14)}
-.ride:hover{border-color:var(--c)}
-.ride .ic{font-size:2.4rem;line-height:1;width:58px;height:58px;display:grid;place-items:center;border-radius:16px;background:color-mix(in srgb,var(--c) 18%,white)}
-.ride h3{font-size:1.25rem;font-weight:800;margin-top:4px}
-.ride small{color:var(--muted);font-weight:700;font-size:.85rem;line-height:1.3}
-.ride .st{position:absolute;top:12px;right:12px;font-size:1rem;letter-spacing:1px}
-.ride .src{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--c)}
-.tools{display:flex;justify-content:center;gap:10px;margin-top:16px;flex-wrap:wrap}
-.chip{padding:8px 14px;border-radius:999px;background:var(--card);font-weight:800;border:2px solid var(--line)}
-.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-.ground{height:46px;margin-top:18px;border-radius:18px 18px 0 0;background:var(--grass);display:flex;align-items:flex-end;justify-content:space-around;font-size:1.8rem;overflow:hidden}
-
-/* ---------- Game ---------- */
-.gbar{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.back{width:44px;height:44px;border-radius:14px;background:var(--card);font-size:1.3rem;font-weight:800;box-shadow:0 3px 0 rgba(29,42,68,.14)}
-.gtitle{flex:1;min-width:0;font-family:var(--display);font-weight:800;font-size:1.3rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.score{font-family:var(--display);font-weight:800;font-size:1.2rem;background:var(--yellow);padding:4px 12px;border-radius:999px}
-.prog{height:12px;border-radius:999px;background:rgba(255,255,255,.8);overflow:hidden;margin-bottom:12px;border:2px solid #fff}
-.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--yellow));border-radius:999px;transition:width .3s}
-.card{background:var(--card);border-radius:22px;padding:18px;box-shadow:0 6px 0 rgba(29,42,68,.12)}
-.qnum{font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-.qtext{font-size:1.35rem;font-weight:800;margin:6px 0 4px;line-height:1.35}
-.qtext .blank{display:inline-block;min-width:70px;border-bottom:4px solid var(--orange);text-align:center;color:var(--blue)}
-.qtext .blank.ok{color:var(--ok);border-color:var(--ok)}
-.qvi{color:var(--muted);font-weight:700;margin-bottom:6px}
-.big-emoji{font-size:5rem;text-align:center;line-height:1.1;margin:4px 0}
-.say{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#eef4ff;color:var(--blue);font-weight:800;font-size:.9rem}
-.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
-.opts.one{grid-template-columns:1fr}
-.opt{padding:14px 12px;border-radius:16px;background:#f3f7fd;border:3px solid var(--line);font-weight:800;font-size:1.1rem;text-align:center;min-height:58px;transition:transform .1s}
-.opt:active{transform:scale(.97)}
-.opt.ok{background:var(--okbg);border-color:var(--ok);color:#11663b}
-.opt.bad{background:var(--badbg);border-color:var(--bad);color:#9b1c20;animation:shake .4s}
-.opt:disabled{cursor:default}
-.feedback{margin-top:14px;padding:12px 14px;border-radius:16px;font-weight:700}
-.feedback.ok{background:var(--okbg);color:#11663b}
-.feedback.bad{background:#fff4e0;color:#7a4b00}
-.next{display:block;width:100%;margin-top:12px;padding:14px;border-radius:16px;background:var(--blue);color:#fff;font-family:var(--display);font-weight:800;font-size:1.3rem;box-shadow:0 4px 0 #1f5fb8}
-.next:active{transform:translateY(3px);box-shadow:0 1px 0 #1f5fb8}
-.next.green{background:var(--green);box-shadow:0 4px 0 #1a8a55}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-@keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
-
-/* balloons */
-.balloons{display:flex;justify-content:center;gap:34px;margin-top:18px}
-.balloon{position:relative;width:118px;height:140px;border-radius:50% 50% 48% 48%;font-family:var(--display);font-size:1.9rem;font-weight:800;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.18);box-shadow:inset -12px -14px 0 rgba(0,0,0,.12);animation:float 2.6s ease-in-out infinite}
-.balloon:nth-child(2){animation-delay:-1.3s}
-.balloon::after{content:"";position:absolute;left:50%;top:100%;width:2px;height:50px;background:#9aa7bd}
-.balloon.b1{background:var(--pink)}
-.balloon.b2{background:var(--purple)}
-.balloon.popped{animation:popb .35s forwards}
-.balloon.wrong{animation:shake .4s}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-@keyframes popb{to{transform:scale(1.6);opacity:0}}
-.rule{margin-top:62px;font-size:.92rem;color:var(--muted);font-weight:700;text-align:center}
-
-/* match */
-.match{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:12px}
-.match .col{display:flex;flex-direction:column;gap:10px}
-.mi{padding:12px 10px;border-radius:14px;border:3px solid var(--line);background:#f8fbff;font-weight:800;font-size:.98rem;text-align:left;min-height:64px;line-height:1.25;display:flex;align-items:center;gap:8px}
-.mi b{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--orange);color:#fff;font-size:.9rem}
-.mi.r b{background:var(--blue)}
-.mi.sel{border-color:var(--orange);background:#fff5e6}
-.mi.done{opacity:.95;cursor:default}
-.mi.bad{animation:shake .4s;border-color:var(--bad)}
-
-/* reading */
-.passage{background:#fffbea;border:2px solid #f3e2a0;border-radius:16px;padding:12px 14px;font-size:1rem;line-height:1.6;margin-bottom:12px}
-.passage summary{font-weight:800;cursor:pointer}
-.passage mark{background:#ffe07a;border-radius:4px;padding:0 3px}
-
-/* builder */
-.slots{min-height:70px;border-radius:16px;border:3px dashed var(--line);padding:10px;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;margin-top:10px;background:#fbfdff}
-.slots.ok{border-color:var(--ok);background:var(--okbg)}
-.slots.bad{border-color:var(--bad);animation:shake .4s}
-.tiles{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:center}
-.tile{padding:10px 14px;border-radius:12px;background:var(--yellow);font-weight:800;font-size:1.1rem;box-shadow:0 3px 0 #d9a900}
-.tile.used{visibility:hidden}
-.slots .tile{background:#fff;border:2px solid var(--blue);box-shadow:none;color:var(--blue)}
-.row2{display:flex;gap:10px}
-.row2 .next{flex:1}
-.ghost{background:#e9eef7;color:var(--ink);box-shadow:0 4px 0 #c5cfdf}
-
-/* scene */
-.scene{position:relative;width:100%;max-width:100%;aspect-ratio:4/3;border-radius:18px;overflow:hidden;background:linear-gradient(180deg,#8fd3ff 0%,#cdeeff 62%,var(--grass) 62%,#5fb552 100%);margin-bottom:10px;border:3px solid #fff}
-.scene span{position:absolute;line-height:1;cursor:pointer;user-select:none;transform:translate(-50%,-50%)}
-.scene .path{position:absolute;left:0;right:0;top:80%;height:9%;background:#e8d3a6;cursor:default;transform:none}
-.tagline{font-size:.85rem;color:var(--muted);font-weight:700;text-align:center}
-
-/* intro + end */
-.intro{text-align:center}
-.intro .big-emoji{font-size:4.4rem}
-.intro p{color:var(--muted);font-weight:700;margin:8px 0}
-.cats{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0}
-.end{text-align:center;animation:pop .4s}
-.end .stars{font-size:3.4rem;letter-spacing:6px;margin:8px 0}
-.end h2{font-size:2rem}
-.review{text-align:left;margin-top:12px;font-size:.95rem;background:#f6f9ff;border-radius:14px;padding:10px 14px;max-height:240px;overflow:auto}
-.review div{padding:4px 0;border-bottom:1px solid var(--line)}
-.review div:last-child{border:0}
-.toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-weight:800;z-index:20;animation:pop .3s}
-#confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
-
-@media (max-width:460px){
-  body{font-size:16px}
-  .qtext{font-size:1.2rem}
-  .opt{font-size:1rem;padding:12px 8px}
-  .balloon{width:100px;height:122px;font-size:1.6rem}
-  .mi{font-size:.88rem;padding:10px 8px}
-  .ride{padding:12px}
-  .ride h3{font-size:1.1rem}
-}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.hero p{margin:6px 0 0;color:var(--muted);font-weight:800;font-size:1.1rem}
+.subjects{display:grid;grid-template-columns:1fr;gap:18px}
+@media (min-width:560px){.subjects{grid-template-columns:1fr 1fr}}
+.subject{display:flex;align-items:center;gap:16px;text-decoration:none;color:var(--ink);background:var(--card);
+  border-radius:26px;padding:20px;border:4px solid transparent;box-shadow:0 6px 0 var(--shadow),0 10px 24px rgba(30,60,120,.08);
+  transition:transform .12s, box-shadow .12s}
+.subject:active{transform:translateY(4px);box-shadow:0 2px 0 var(--shadow),0 6px 14px rgba(30,60,120,.08)}
+.subject:focus-visible{outline:none;border-color:var(--blue)}
+@media (min-width:560px){.subject{flex-direction:column;text-align:center;padding:28px 20px}}
+.subject .ic{flex:none;width:92px;height:92px;border-radius:24px;display:grid;place-items:center;font-size:52px;background:var(--tint)}
+.subject h2{font-family:var(--display);font-size:1.9rem;font-weight:800;margin:0;line-height:1.1}
+.subject p{margin:4px 0 0;color:var(--muted);font-weight:700}
+.subject .go{display:inline-block;margin-top:10px;font-weight:800;color:#fff;background:var(--accent);border-radius:999px;padding:6px 18px}
+.math{--accent:var(--blue);--tint:#e2efff;--shadow:#bcd6f7}
+.math h2{color:var(--blue)}
+.eng{--accent:var(--red);--tint:#ffe5e6;--shadow:#f6c3c5}
+.eng h2{color:var(--red)}
+.ground{margin-top:28px;display:flex;justify-content:space-around;font-size:34px;background:#7ccf6a;border-radius:20px 20px 0 0;padding:8px 6px 4px}
 </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bunting" aria-hidden="true">
+    <i style="background:#ff5a5f"></i><i style="background:#ff9f1c"></i><i style="background:#ffd23f"></i><i style="background:#2bb673"></i>
+    <i style="background:#2f80ed"></i><i style="background:#8e5cf7"></i><i style="background:#ff5a5f"></i><i style="background:#ff9f1c"></i>
+    <i style="background:#ffd23f"></i><i style="background:#2bb673"></i><i style="background:#2f80ed"></i><i style="background:#8e5cf7"></i>
+  </div>
 
-<div id="app"></div>
-<canvas id="confetti"></canvas>
+  <header class="hero">
+    <h1>Vui <span>Học</span></h1>
+    <p>Hôm nay em muốn học môn gì?</p>
+  </header>
 
-<script>
-(function(){
-"use strict";
-/* ================= DATA ================= */
-const RIDES = [
-  {id:"vocab",  icon:"🎡", name:"Word Wheel",       vi:"Từ vựng: nghề nghiệp, sở thích, nơi ở, quốc tịch…", src:"Unit 5 · Vocabulary", c:"#ff5a5f"},
-  {id:"waswere",icon:"🎈", name:"Was or Were?",     vi:"Bắn bóng: chọn was hay were (20 câu)",        src:"Bài tập 1", c:"#ff6fb5"},
-  {id:"match",  icon:"🔗", name:"Match It!",        vi:"Nối câu hỏi với câu trả lời",                 src:"Bài 7 · Read and match", c:"#ff9f1c"},
-  {id:"quiz",   icon:"🎢", name:"Roller Quiz",      vi:"Chọn đáp án đúng nhất",                       src:"Bài 8 · Choose", c:"#2f80ed"},
-  {id:"reading",icon:"📖", name:"Dream Jobs",       vi:"Đọc đoạn văn và điền từ",                     src:"Unit 5 · Reading", c:"#2bb673"},
-  {id:"builder",icon:"🧩", name:"Sentence Builder", vi:"Sắp xếp từ thành câu đúng",                   src:"Unit 5 · Grammar", c:"#8e5cf7"},
-  {id:"picture",icon:"🔍", name:"Park Picture",     vi:"Nhìn tranh công viên, trả lời câu hỏi",        src:"Flyers · Picture", c:"#00a6a6"}
-];
-
-const VOCAB = {
-  jobs:{label:"👷 Jobs", items:[
-    ["👨‍✈️","pilot","phi công"],["👩‍⚕️","doctor","bác sĩ"],["👨‍🏫","teacher","giáo viên"],["🧑‍🚒","firefighter","lính cứu hỏa"],
-    ["👨‍🍳","cook","đầu bếp"],["👩‍🌾","farmer","nông dân"],["👮","police officer","cảnh sát"],["🧑‍🚀","astronaut","phi hành gia"],
-    ["🧑‍🎤","singer","ca sĩ"],["🩺🐶","vet","bác sĩ thú y"],["🦷","dentist","nha sĩ"],["🧑‍🔧","mechanic","thợ máy"],["🧑‍🎨","artist","họa sĩ"],["👷","builder","thợ xây"]]},
-  hobbies:{label:"🎨 Hobbies", items:[
-    ["📚","reading books","đọc sách"],["🏊","swimming","bơi lội"],["🚴","cycling","đạp xe"],["⚽","playing football","chơi bóng đá"],
-    ["🎨","drawing pictures","vẽ tranh"],["🎸","playing the guitar","chơi đàn ghi-ta"],["💻","surfing the internet","lướt mạng"],
-    ["🎣","fishing","câu cá"],["💃","dancing","nhảy múa"],["🎮","playing computer games","chơi điện tử"],["🪁","flying a kite","thả diều"],["🎤","singing","ca hát"]]},
-  places:{label:"🏠 Homes & Places", items:[
-    ["🏢","tower","tòa tháp / tòa nhà cao"],["🏠","house","ngôi nhà"],["🏙️","city","thành phố"],["🛣️","street","con phố / đường"],
-    ["🔢🏢","floor","tầng (nhà)"],["📮","address","địa chỉ"],["🏬","flat","căn hộ"],["🗺️","province","tỉnh"],["🏡","village","ngôi làng"],
-    ["🏝️","island","hòn đảo"],["⛰️","mountains","núi"],["🎢","theme park","công viên giải trí"]]},
-  countries:{label:"🌏 Countries", items:[
-    ["🗼🍣","Japanese","I'm from Japan. I'm ___."],["🍜⭐","Vietnamese","I'm from Viet Nam. I'm ___."],["💂☕","English","She's from England. She's ___."],
-    ["🗽🍔","American","He's from America. He's ___."],["🦘🐨","Australian","They're from Australia. They're ___."],["🥢🐼","Chinese","He's from China. He's ___."],
-    ["🥐🗼","French","She's from France. She's ___."],["🍙🎎","Korean","I'm from Korea. I'm ___."],["🍕🛵","Italian","He's from Italy. He's ___."],["🌮🌵","Mexican","She's from Mexico. She's ___."]]},
-  freq:{label:"⏰ How often", items:[
-    ["1️⃣","once a week","một lần một tuần"],["2️⃣","twice a week","hai lần một tuần"],["3️⃣","three times a week","ba lần một tuần"],
-    ["💯","always","luôn luôn"],["👍","usually","thường xuyên"],["🙂","often","thường"],["🤷","sometimes","thỉnh thoảng"],["🚫","never","không bao giờ"],["📅","every day","mỗi ngày"]]},
-  people:{label:"😊 Personality", items:[
-    ["🤗","kind","tốt bụng"],["😃","friendly","thân thiện"],["🤡","funny","vui tính, hài hước"],["🙈","shy","nhút nhát"],
-    ["🧠","clever","thông minh"],["🤝","helpful","hay giúp đỡ"],["💪","hard-working","chăm chỉ"],["😴","lazy","lười biếng"],["🦁","brave","dũng cảm"],["🤫","quiet","trầm lặng"]]}
-};
-
-/* Bài tập 1: was / were. Each blank's answer in order. */
-const WASWERE = [
-  ["My parents ___ very tired after their trip to Newcastle.",["were"]],
-  ["Those houses ___ built two hundred years ago.",["were"]],
-  ["Last winter ___ the coldest winter in our region.",["was"]],
-  ["I ___ on a long trip to the USA two years ago.",["was"]],
-  ["My brother's letters ___ long and interesting.",["were"]],
-  ["They ___ in the History Museum yesterday.",["were"]],
-  ["Who ___ the best football player in Great Britain last year?",["was"]],
-  ["They ___ very happy at the party last night.",["were"]],
-  ["The film ___ not interesting, so I switched off the TV.",["was"]],
-  ["The boys ___ very noisy at the lesson yesterday.",["were"]],
-  ["There ___ many flowers in the schoolyard at this time last year.",["were"]],
-  ["Who ___ the best sportsman in your class last month?",["was"]],
-  ["The girls ___ in the club two weeks ago.",["were"]],
-  ["You ___ not at home yesterday. Where ___ you?",["were","were"]],
-  ["___ that man here last night?",["Was"]],
-  ["Mrs. Toan ___ ill 3 days ago.",["was"]],
-  ["My sister ___ not well last Saturday, so she stayed at home.",["was"]],
-  ["My mum ___ in a hospital last week.",["was"]],
-  ["What ___ your favourite toys when you ___ a child?",["were","were"]],
-  ["There ___ a lot of people at the party last night.",["was"]]
-];
-
-/* Bài 7: Read and match + Unit 5 jobs round */
-const MATCH_ROUNDS = [
-  {title:"Round 1 · Where…?", pairs:[
-    ["Where do your grandparents live?","They live in Hanoi city."],
-    ["Where are you from?","I'm from Vinh Phuc Province."],
-    ["What's her address?","It's 52 Le Thanh Tong Street."],
-    ["Where does Tom live?","He lives in flat 18 on the third floor of Star Tower."],
-    ["Where is she from?","She's from England."]]},
-  {title:"Round 2 · Why do you want to be…?", pairs:[
-    ["I want to be a pilot…","because I want to fly a plane."],
-    ["I want to be a vet…","because I want to look after animals."],
-    ["I want to be a firefighter…","because I want to put out fires."],
-    ["I want to be a teacher…","because I want to teach children."],
-    ["I want to be a cook…","because I want to cook delicious food."]]}
-];
-
-/* Bài 8 + extra Unit 5 grammar. [question, options, correctIndex, hint, fromBook] */
-const QUIZ = [
-  ["Where are they from? – They ___ from Da Nang city.",["are","is","am","'s"],0,"They → are.",1],
-  ["What is her address? – It's Flat 25 on the fifth ___ of Lotte Tower.",["road","street","city","floor"],3,"the fifth floor = tầng 5.",1],
-  ["___ does she ___? – She lives in Ho Chi Minh city.",["Where / lives","Where / live","What / live","Where / from"],1,"Sau does dùng động từ nguyên mẫu: Where does she live?",1],
-  ["They live ___ 230, Tran Hung Dao Street.",["at","in","on","the"],0,"Địa chỉ có số nhà → at.",1],
-  ["He lives ___ the third floor of Red Tower.",["the","at","in","on"],3,"on the ... floor (trên tầng mấy).",1],
-  ["What do you want to be in the future? – I ___ to be a doctor.",["want","wants","wanting","am want"],0,"I want to be ...",0],
-  ["My sister ___ to be a vet.",["want","wants","wanting","is want"],1,"She / my sister → wants.",0],
-  ["Why do you want to be a pilot? – ___ I want to fly a plane.",["Because","So","But","And"],0,"Why? → Because ...",0],
-  ["How often do you surf the internet? – I surf the internet ___ a week.",["twice","two","second","both"],0,"twice = hai lần.",0],
-  ["Do you like playing football? – Yes, I ___.",["do","does","am","like"],0,"Do you...? → Yes, I do. / No, I don't.",0],
-  ["At the weekend, I ___ my grandparents.",["visit","visits","visiting","to visit"],0,"I + động từ nguyên mẫu.",0],
-  ["He is from Japan. He is ___.",["Japanese","Japan","English","Chinese"],0,"Japan → Japanese.",0],
-  ["Lan always helps her friends. She is very ___.",["helpful","lazy","shy","noisy"],0,"helpful = hay giúp đỡ.",0],
-  ["Where do you live? – I live ___ a flat in Hanoi.",["in","on","at","to"],0,"live in a flat / in Hanoi.",0],
-  ["What does your father do? – He ___ a firefighter.",["is","are","am","be"],0,"He → is.",0],
-  ["I ___ go swimming. I don't like water.",["never","always","usually","often"],0,"never = không bao giờ.",0]
-];
-
-const PASSAGE = "In the future, I would like to be a <mark>pilot</mark> because I want to <mark>fly</mark> a plane and travel to many countries. I think it is an exciting job. I like watching <mark>planes</mark> in the sky, and I hope to fly one someday. My sister has a different dream. She wants to be a <mark>vet</mark> because she loves animals very much. She wants to look after <mark>the pets</mark> when they are sick. She often plays with <mark>our dogs</mark> at home.";
-const READING = [
-  ["I want to be a ___.","pilot",["pilot","doctor","teacher","singer"]],
-  ["I want to ___ a plane and travel to many countries.","fly",["fly","drive","ride","make"]],
-  ["I love watching ___ in the sky.","planes",["planes","birds","stars","kites"]],
-  ["My sister wants to be a ___.","vet",["vet","pilot","cook","nurse"]],
-  ["She wants to look after ___ when they are sick.","the pets",["the pets","the children","the plants","the old people"]],
-  ["She often plays with ___ at home.","our dogs",["our dogs","her cats","her dolls","our fish"]]
-];
-
-const SENTENCES = [
-  "What do you want to be in the future?",
-  "I want to be a pilot.",
-  "Why do you want to be a vet?",
-  "Because I want to look after animals.",
-  "I live in a flat in Hanoi.",
-  "At the weekend, I go swimming.",
-  "I surf the internet twice a week.",
-  "Where does your grandmother live?",
-  "She lives on the fifth floor.",
-  "Do you like reading books?",
-  "Yes, I do.",
-  "No, I don't.",
-  "Where are you from?",
-  "My brother wants to be a doctor."
-];
-
-/* Picture scene: [emoji, word, x%, y%, size(rem)] */
-const SCENE = [
-  ["☀️","the sun",9,12,3],["☁️","a cloud",32,9,2.6],["☁️","a cloud",70,6,2.2],
-  ["🐦","a bird",48,18,1.6],["🐦","a bird",56,11,1.6],["🪁","a kite",88,14,2.2],
-  ["🎢","a roller coaster",18,44,4.6],["🎡","a Ferris wheel",72,36,6.4],
-  ["🌳","a tree",45,48,4],["🌳","a tree",94,58,3.4],
-  ["🐕","a dog",45,70,2.2],
-  ["🎈","a balloon",12,53,1.8],["🎈","a balloon",19,50,1.8],["🎈","a balloon",26,53,1.8],
-  ["👧","a girl",19,70,3],
-  ["👦","a boy",64,76,3],["🌭","a hot dog",70,74,1.6],
-  ["👩","a woman",84,74,3],["🍦","an ice cream",90,70,1.7]
-];
-const PICTURE_Q = [
-  ["How many balloons can you see?",["three","two","four","five"]],
-  ["What is the boy eating?",["a hot dog","an ice cream","a pizza","a cake"]],
-  ["Where is the dog?",["under the tree","on the Ferris wheel","in the sky","next to the woman"]],
-  ["What's the weather like?",["It's sunny.","It's rainy.","It's snowy.","It's stormy."]],
-  ["What is the woman holding?",["an ice cream","a balloon","a hot dog","a kite"]],
-  ["How many birds are there in the sky?",["two","one","three","four"]],
-  ["Which ride is on the left?",["the roller coaster","the Ferris wheel","the carousel","the train"]],
-  ["What is the girl holding?",["balloons","a kite","a dog","an ice cream"]],
-  ["What is flying next to the Ferris wheel?",["a kite","a plane","a balloon","a bird"]],
-  ["How many trees are there?",["two","one","three","four"]]
-];
-
-const PRAISE = ["Great job! 🎉","Excellent! 🌟","Super! 🚀","Well done! 👏","Awesome! 🤩","Perfect! 💯","Fantastic! 🎈"];
-const OOPS = ["Oops! Nhớ nhé:","Gần đúng rồi! Đáp án là:","Không sao! Cùng học nào:"];
-
-/* ================= STATE ================= */
-const KEY = "u5park.v1";
-let save = {name:"", stars:{}, mute:false};
-try{ const s = JSON.parse(localStorage.getItem(KEY)||"null"); if(s) save = Object.assign(save,s); }catch(e){}
-function persist(){ try{ localStorage.setItem(KEY, JSON.stringify(save)); }catch(e){} }
-
-/* ================= HELPERS ================= */
-const app = document.getElementById("app");
-const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
-const pick = a => a[Math.floor(Math.random()*a.length)];
-const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const starStr = n => "⭐".repeat(n)+"☆".repeat(3-n);
-
-/* sound */
-let actx=null;
-function tone(freq,dur,type,when,vol){
-  if(save.mute) return;
-  try{
-    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
-    if(actx.state==="suspended") actx.resume();
-    const t=actx.currentTime+(when||0), o=actx.createOscillator(), g=actx.createGain();
-    o.type=type||"sine"; o.frequency.setValueAtTime(freq,t);
-    g.gain.setValueAtTime(vol||.18,t); g.gain.exponentialRampToValueAtTime(.001,t+dur);
-    o.connect(g).connect(actx.destination); o.start(t); o.stop(t+dur);
-  }catch(e){}
-}
-const sfx = {
-  ok(){ tone(660,.12,"triangle",0); tone(880,.12,"triangle",.1); tone(1320,.25,"triangle",.2); },
-  bad(){ tone(220,.25,"sawtooth",0,.12); tone(160,.3,"sawtooth",.15,.1); },
-  click(){ tone(520,.06,"square",0,.06); },
-  pop(){ tone(900,.05,"square",0,.12); tone(300,.12,"triangle",.04,.12); },
-  win(){ [523,659,784,1046,1318].forEach((f,i)=>tone(f,.2,"triangle",i*.12)); }
-};
-
-/* speech */
-let voice=null;
-function pickVoice(){ try{ const vs=speechSynthesis.getVoices(); voice = vs.find(v=>/en[-_]GB/i.test(v.lang)) || vs.find(v=>/^en/i.test(v.lang)) || null; }catch(e){} }
-try{ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }catch(e){}
-function speak(text){
-  if(save.mute) return;
-  try{
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text.replace(/_+/g," blank "));
-    u.lang = voice? voice.lang : "en-GB"; if(voice) u.voice=voice; u.rate=.85; u.pitch=1.05;
-    speechSynthesis.speak(u);
-  }catch(e){}
-}
-
-function toast(msg){
-  const t=document.createElement("div"); t.className="toast"; t.textContent=msg; document.body.appendChild(t);
-  setTimeout(()=>t.remove(),1400);
-}
-
-/* confetti */
-const cv=document.getElementById("confetti"), cx=cv.getContext("2d");
-let parts=[], raf=0;
-function confetti(){
-  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  cv.width=innerWidth; cv.height=innerHeight;
-  const cols=["#ff5a5f","#ff9f1c","#ffd23f","#2bb673","#2f80ed","#8e5cf7","#ff6fb5"];
-  for(let i=0;i<140;i++) parts.push({x:Math.random()*cv.width,y:-20-Math.random()*cv.height*.5,vx:(Math.random()-.5)*3,vy:2+Math.random()*4,r:Math.random()*6.28,vr:(Math.random()-.5)*.3,s:6+Math.random()*6,c:pick(cols)});
-  if(!raf) loop();
-}
-function loop(){
-  cx.clearRect(0,0,cv.width,cv.height);
-  parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);cx.restore();});
-  parts=parts.filter(p=>p.y<cv.height+20);
-  raf = parts.length? requestAnimationFrame(loop) : 0;
-  if(!raf) cx.clearRect(0,0,cv.width,cv.height);
-}
-
-/* ================= HOME ================= */
-function totalStars(){ return RIDES.reduce((s,r)=>s+(save.stars[r.id]||0),0); }
-function home(){
-  try{ speechSynthesis.cancel(); }catch(e){}
-  const bunt = Array.from({length:16},(_,i)=>`<i style="background:${["#ff5a5f","#ff9f1c","#ffd23f","#2bb673","#2f80ed","#8e5cf7"][i%6]}"></i>`).join("");
-  app.innerHTML = `
-    <div class="bunting" aria-hidden="true">${bunt}</div>
-    <div class="hero">
-      <h1>Unit 5 <span>Theme Park</span></h1>
-      <p>Move up 5 · Unit 5 Lesson 3 + Review 1 · Cambridge Flyers</p>
-    </div>
-    <div class="ticket">
-      <label for="nm">🎟️ Tên em:</label>
-      <input id="nm" maxlength="20" placeholder="Nhập tên…" value="${esc(save.name)}">
-      <div class="total" title="Tổng số sao">⭐ ${totalStars()} / ${RIDES.length*3}</div>
-    </div>
-    <div class="rides">
-      ${RIDES.map(r=>`
-        <button class="ride" data-id="${r.id}" style="--c:${r.c}">
-          <span class="st" aria-label="${save.stars[r.id]||0} sao">${starStr(save.stars[r.id]||0)}</span>
-          <span class="ic">${r.icon}</span>
-          <h3>${r.name}</h3>
-          <span class="src">${r.src}</span>
-          <small>${r.vi}</small>
-        </button>`).join("")}
-    </div>
-    <div class="tools">
-      <button class="chip ${save.mute?"":"on"}" id="snd">${save.mute?"🔇 Âm thanh: tắt":"🔊 Âm thanh: bật"}</button>
-      <button class="chip" id="rst">↺ Xóa điểm</button>
-    </div>
-    <div id="rstbox"></div>
-    <div class="ground" aria-hidden="true"><span>🌳</span><span>🌷</span><span>🎪</span><span>🌼</span><span>🌳</span><span>🎠</span><span>🌷</span></div>`;
-  document.getElementById("nm").addEventListener("input",e=>{save.name=e.target.value.trim();persist();});
-  app.querySelectorAll(".ride").forEach(b=>b.addEventListener("click",()=>{sfx.click(); startRide(b.dataset.id);}));
-  document.getElementById("snd").onclick=()=>{save.mute=!save.mute;persist();home();if(!save.mute)sfx.ok();};
-  document.getElementById("rst").onclick=()=>{
-    const box=document.getElementById("rstbox");
-    box.innerHTML=`<div class="card" style="margin-top:10px;text-align:center"><b>Xóa hết sao đã đạt?</b><div class="row2" style="margin-top:8px"><button class="next ghost" id="no">Không</button><button class="next" id="yes" style="background:var(--bad);box-shadow:0 4px 0 #a52a2e">Xóa</button></div></div>`;
-    document.getElementById("no").onclick=()=>box.innerHTML="";
-    document.getElementById("yes").onclick=()=>{save.stars={};persist();home();toast("Đã xóa điểm");};
-  };
-  window.scrollTo(0,0);
-}
-
-/* ================= GAME SHELL ================= */
-let G=null;
-function shell(rideId,total){
-  const r=RIDES.find(x=>x.id===rideId);
-  app.innerHTML=`
-    <div class="gbar">
-      <button class="back" id="bk" aria-label="Về công viên">←</button>
-      <div class="gtitle">${r.icon} ${r.name}</div>
-      <div class="score">⭐ <span id="sc">0</span></div>
-    </div>
-    <div class="prog"><i id="pg"></i></div>
-    <div id="stage"></div>`;
-  document.getElementById("bk").onclick=()=>{sfx.click();home();};
-  G={ride:r,total,i:0,score:0,log:[],stage:document.getElementById("stage")};
-  window.scrollTo(0,0);
-  return G;
-}
-function setProg(){ document.getElementById("pg").style.width=(100*G.i/G.total)+"%"; document.getElementById("sc").textContent=G.score; }
-function right(){ G.score++; setProg(); sfx.ok(); }
-function wrongLog(q,ans){ G.log.push([q,ans]); sfx.bad(); }
-
-function finish(){
-  G.i=G.total; setProg();
-  const pct=G.score/G.total;
-  const stars = pct>=.9?3:pct>=.7?2:1;
-  const prev = save.stars[G.ride.id]||0;
-  if(stars>prev){ save.stars[G.ride.id]=stars; persist(); }
-  sfx.win(); confetti();
-  const nm = save.name? `, ${esc(save.name)}`:"";
-  const title = stars===3?`Xuất sắc${nm}!`:stars===2?`Giỏi lắm${nm}!`:`Cố lên${nm}!`;
-  G.stage.innerHTML=`
-    <div class="card end">
-      <div class="stars">${starStr(stars)}</div>
-      <h2>${title}</h2>
-      <p style="font-weight:800;font-size:1.2rem;margin:6px 0">Đúng ${G.score} / ${G.total}</p>
-      ${stars<3?`<p style="color:var(--muted);font-weight:700;margin:0">Chơi lại để lấy đủ 3 sao nhé!</p>`:""}
-      ${G.log.length?`<div class="review"><b>📝 Các câu cần nhớ:</b>${G.log.map(l=>`<div>${esc(l[0])} → <b style="color:var(--ok)">${esc(l[1])}</b></div>`).join("")}</div>`:""}
-      <div class="row2" style="margin-top:14px">
-        <button class="next ghost" id="hm">🏠 Công viên</button>
-        <button class="next green" id="ag">↻ Chơi lại</button>
+  <main class="subjects">
+    <a class="subject math" href="math.html">
+      <div class="ic" aria-hidden="true">🔢</div>
+      <div>
+        <h2>Môn Toán</h2>
+        <p>Luyện tập tính toán vui nhộn</p>
+        <span class="go">Vào học ➜</span>
       </div>
-    </div>`;
-  const id=G.ride.id;
-  document.getElementById("hm").onclick=()=>{sfx.click();home();};
-  document.getElementById("ag").onclick=()=>{sfx.click();startRide(id);};
-}
-
-/* Generic multiple choice step. q:{qnum,html,vi,emoji,sayText,opts,answer,hint,logQ,onSpeakAnswer} */
-function mcq(q,onDone){
-  const opts = q.keepOrder? q.opts : shuffle(q.opts);
-  G.stage.innerHTML=`
-    <div class="card">
-      <div class="qnum">${q.qnum}</div>
-      ${q.pre||""}
-      ${q.emoji?`<div class="big-emoji" aria-hidden="true">${q.emoji}</div>`:""}
-      <div class="qtext">${q.html}</div>
-      ${q.vi?`<div class="qvi">${q.vi}</div>`:""}
-      ${q.sayText?`<button class="say" id="say">🔊 Nghe</button>`:""}
-      <div class="opts ${opts.some(o=>o.length>18)?"one":""}">${opts.map(o=>`<button class="opt" data-v="${esc(o)}">${esc(o)}</button>`).join("")}</div>
-      <div id="fb"></div>
-    </div>`;
-  if(q.sayText) document.getElementById("say").onclick=()=>speak(q.sayText);
-  const btns=[...G.stage.querySelectorAll(".opt")];
-  btns.forEach(b=>b.onclick=()=>{
-    btns.forEach(x=>x.disabled=true);
-    const ok = b.dataset.v===q.answer;
-    const fb=document.getElementById("fb");
-    btns.find(x=>x.dataset.v===q.answer).classList.add("ok");
-    if(ok){
-      right();
-      fb.innerHTML=`<div class="feedback ok">${pick(PRAISE)}${q.hint?` <span style="font-weight:700">${esc(q.hint)}</span>`:""}</div>`;
-      if(q.speakAfter) speak(q.speakAfter);
-      setTimeout(onDone, q.hint?1700:1000);
-    } else {
-      b.classList.add("bad"); wrongLog(q.logQ||q.answer,q.answer);
-      fb.innerHTML=`<div class="feedback bad">${pick(OOPS)} <b>${esc(q.answer)}</b>${q.hint?`<br>💡 ${esc(q.hint)}`:""}</div><button class="next" id="nx">Tiếp tục ➜</button>`;
-      if(q.speakAfter) speak(q.speakAfter);
-      document.getElementById("nx").onclick=()=>{sfx.click();onDone();};
-    }
-  });
-}
-
-function startRide(id){ ({vocab:vocabIntro,waswere:wasWere,match:matchGame,quiz:quizGame,reading:readingGame,builder:builderGame,picture:pictureGame})[id](); }
-
-/* ================= 1. VOCAB ================= */
-function vocabIntro(){
-  shell("vocab",1); G.stage.innerHTML=`
-    <div class="card intro">
-      <div class="big-emoji">🎡</div>
-      <h2>Chọn chủ đề</h2>
-      <p>Nhìn hình hoặc nghĩa tiếng Việt, chọn từ tiếng Anh đúng.</p>
-      <div class="cats">
-        <button class="chip on" data-k="all">🌈 Tất cả</button>
-        ${Object.entries(VOCAB).map(([k,v])=>`<button class="chip" data-k="${k}">${v.label}</button>`).join("")}
+    </a>
+    <a class="subject eng" href="english.html">
+      <div class="ic" aria-hidden="true">🔤</div>
+      <div>
+        <h2>Môn Tiếng Anh</h2>
+        <p>Move up 5 · Học theo từng Unit</p>
+        <span class="go">Vào học ➜</span>
       </div>
-    </div>`;
-  G.stage.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{sfx.click();vocabGame(b.dataset.k);});
-}
-function vocabGame(cat){
-  const keys = cat==="all"? Object.keys(VOCAB):[cat];
-  let pool=[]; keys.forEach(k=>VOCAB[k].items.forEach(it=>pool.push({k,it})));
-  pool = shuffle(pool).slice(0, cat==="all"?12:Math.min(10,pool.length));
-  shell("vocab",pool.length); setProg();
-  const step=()=>{
-    if(G.i>=G.total) return finish();
-    const {k,it}=pool[G.i];
-    const [emo,word,meaning]=it;
-    const others = shuffle(VOCAB[k].items.filter(x=>x[1]!==word)).slice(0,3).map(x=>x[1]);
-    const isCountry = k==="countries";
-    mcq({
-      qnum:`${VOCAB[k].label} · Câu ${G.i+1}/${G.total}`,
-      emoji:emo,
-      html: isCountry? esc(meaning).replace("___",'<span class="blank">?</span>') : (Math.random()<.5?`“${esc(meaning)}” là gì?`:"What is it?"),
-      vi: isCountry? "Chọn quốc tịch đúng" : (k==="freq"||k==="people"||k==="places")?`Gợi ý: ${esc(meaning)}`:"",
-      opts:[word,...others], answer:word, speakAfter: isCountry? meaning.replace("___",word) : word,
-      logQ: isCountry? meaning : `${emo} ${meaning}`
-    },()=>{G.i++;setProg();step();});
-  };
-  step();
-}
+    </a>
+  </main>
 
-/* ================= 2. WAS / WERE ================= */
-function wasWere(){
-  const list=shuffle(WASWERE).slice(0,10);
-  shell("waswere",list.length); setProg();
-  const step=()=>{
-    if(G.i>=G.total) return finish();
-    const [sent,ans]=list[G.i]; let bi=0, miss=false;
-    const draw=()=>{
-      let n=0;
-      const html=esc(sent).replace(/___/g,()=>{const k=n++; return `<span class="blank ${k<bi?"ok":""}">${k<bi?ans[k]:"?"}</span>`;});
-      G.stage.innerHTML=`
-        <div class="card" style="text-align:center">
-          <div class="qnum">Câu ${G.i+1}/${G.total} · Bắn quả bóng đúng!</div>
-          <div class="qtext">${html}</div>
-          <button class="say" id="say">🔊 Nghe</button>
-          <div class="balloons">
-            <button class="balloon b1" data-v="was">${ans[bi]==="Was"?"Was":"was"}</button>
-            <button class="balloon b2" data-v="were">${ans[bi]==="Was"?"Were":"were"}</button>
-          </div>
-          <div class="rule">💡 I / he / she / it / 1 người, 1 vật → <b>was</b> · you / we / they / nhiều người, nhiều vật → <b>were</b></div>
-          <div id="fb"></div>
-        </div>`;
-      document.getElementById("say").onclick=()=>speak(sent);
-      G.stage.querySelectorAll(".balloon").forEach(b=>b.onclick=()=>{
-        const ok = b.dataset.v===ans[bi].toLowerCase();
-        if(ok){
-          b.classList.add("popped"); sfx.pop(); bi++;
-          if(bi<ans.length){ setTimeout(draw,380); return; }
-          G.stage.querySelectorAll(".balloon").forEach(x=>x.disabled=true);
-          let m=0; const full=sent.replace(/___/g,()=>ans[m++]);
-          setTimeout(()=>{
-            if(!miss) right();
-            document.getElementById("fb").innerHTML=`<div class="feedback ${miss?"bad":"ok"}" style="margin-top:10px">${miss?"Đúng rồi, lần sau nhớ nhé!":pick(PRAISE)}<br>“${esc(full)}”</div>`;
-            speak(full);
-            setTimeout(()=>{G.i++;setProg();step();}, 1900);
-          },300);
-        } else {
-          b.classList.remove("wrong"); void b.offsetWidth; b.classList.add("wrong");
-          if(!miss){ miss=true; let m=0; wrongLog(sent.replace(/___/g,()=>"___"), ans.join(" … ")); } else sfx.bad();
-          toast("Thử quả bóng kia nhé!");
-        }
-      });
-    };
-    draw();
-  };
-  step();
-}
-
-/* ================= 3. MATCH ================= */
-function matchGame(){
-  const total = MATCH_ROUNDS.reduce((s,r)=>s+r.pairs.length,0);
-  shell("match",total); setProg();
-  let round=0;
-  const playRound=()=>{
-    if(round>=MATCH_ROUNDS.length) return finish();
-    const R=MATCH_ROUNDS[round];
-    const left=R.pairs.map((p,i)=>({i,t:p[0]}));
-    const rightCol=shuffle(R.pairs.map((p,i)=>({i,t:p[1]})));
-    const letters="ABCDE";
-    const colors=["#ff5a5f","#2bb673","#2f80ed","#8e5cf7","#ff9f1c"];
-    G.stage.innerHTML=`
-      <div class="card">
-        <div class="qnum">${R.title}</div>
-        <div class="qvi" style="margin-top:4px">Chạm 1 câu bên trái, rồi chạm câu trả lời bên phải.</div>
-        <div class="match">
-          <div class="col">${left.map((x,k)=>`<button class="mi l" data-i="${x.i}"><b>${k+1}</b><span>${esc(x.t)}</span></button>`).join("")}</div>
-          <div class="col">${rightCol.map((x,k)=>`<button class="mi r" data-i="${x.i}"><b>${letters[k]}</b><span>${esc(x.t)}</span></button>`).join("")}</div>
-        </div>
-        <div id="fb"></div>
-      </div>`;
-    let sel=null, done=0; const missed=new Set();
-    const L=[...G.stage.querySelectorAll(".mi.l")], Rb=[...G.stage.querySelectorAll(".mi.r")];
-    L.forEach(b=>b.onclick=()=>{ if(b.classList.contains("done"))return; sfx.click(); L.forEach(x=>x.classList.remove("sel")); b.classList.add("sel"); sel=b; speak(b.textContent.slice(1)); });
-    Rb.forEach(b=>b.onclick=()=>{
-      if(b.classList.contains("done")) return;
-      if(!sel){ toast("Chọn câu bên trái trước nhé!"); return; }
-      const li=+sel.dataset.i;
-      if(+b.dataset.i===li){
-        const col=colors[done%colors.length];
-        [sel,b].forEach(x=>{x.classList.remove("sel");x.classList.add("done");x.style.borderColor=col;x.style.background=col+"22";x.querySelector("b").style.background=col;});
-        if(!missed.has(li)) right(); else sfx.ok();
-        speak(b.textContent.slice(1));
-        sel=null; done++; G.i++; setProg();
-        if(done===R.pairs.length){
-          document.getElementById("fb").innerHTML=`<div class="feedback ok">${pick(PRAISE)} Hoàn thành ${R.title.split("·")[0]}!</div><button class="next green" id="nx">${round+1<MATCH_ROUNDS.length?"Round tiếp theo ➜":"Xem kết quả ➜"}</button>`;
-          document.getElementById("nx").onclick=()=>{sfx.click();round++;playRound();};
-        }
-      } else {
-        b.classList.remove("bad"); void b.offsetWidth; b.classList.add("bad");
-        if(!missed.has(li)){ missed.add(li); wrongLog(R.pairs[li][0],R.pairs[li][1]); } else sfx.bad();
-      }
-    });
-  };
-  playRound();
-}
-
-/* ================= 4. QUIZ ================= */
-function quizGame(){
-  const book=QUIZ.filter(q=>q[4]), extra=shuffle(QUIZ.filter(q=>!q[4])).slice(0,5);
-  const list=shuffle(book.concat(extra));
-  shell("quiz",list.length); setProg();
-  const step=()=>{
-    if(G.i>=G.total) return finish();
-    const [qt,opts,ci,hint,fromBook]=list[G.i];
-    const isPair = opts[0].includes("/");
-    mcq({
-      qnum:`Câu ${G.i+1}/${G.total}${fromBook?" · 📗 Bài 8":""}`,
-      html:esc(qt).replace(/___/g,'<span class="blank">?</span>'),
-      sayText:qt, opts:opts.slice(), answer:opts[ci], hint, logQ:qt,
-      speakAfter: isPair? null : qt.replace("___",opts[ci])
-    },()=>{G.i++;setProg();step();});
-  };
-  step();
-}
-
-/* ================= 5. READING ================= */
-function readingGame(){
-  shell("reading",READING.length); setProg();
-  const step=()=>{
-    if(G.i>=G.total) return finish();
-    const [s,ans,opts]=READING[G.i];
-    mcq({
-      qnum:`Câu ${G.i+1}/${G.total} · Read and complete`,
-      pre:`<details class="passage" ${G.i===0||matchMedia("(min-width:600px)").matches?"open":""}><summary>📖 Đoạn văn (chạm để mở/đóng)</summary><p style="margin:8px 0 0">${PASSAGE.replace(/<mark>(.*?)<\/mark>/g,"$1")}</p><button class="say" id="sayp" style="margin-top:6px">🔊 Nghe cả đoạn</button></details>`,
-      html:esc(s).replace("___",'<span class="blank">?</span>'),
-      opts:opts.slice(), answer:ans, speakAfter:s.replace("___",ans), logQ:s
-    },()=>{G.i++;setProg();step();});
-    const sp=document.getElementById("sayp"); if(sp) sp.onclick=e=>{e.preventDefault();speak(PASSAGE.replace(/<\/?mark>/g,""));};
-  };
-  step();
-}
-
-/* ================= 6. SENTENCE BUILDER ================= */
-function builderGame(){
-  const list=shuffle(SENTENCES).slice(0,6);
-  shell("builder",list.length); setProg();
-  const step=()=>{
-    if(G.i>=G.total) return finish();
-    const target=list[G.i]; const words=target.split(" ");
-    let tiles=shuffle(words.map((w,k)=>({w,k})));
-    if(tiles.every((t,k)=>t.k===k) && words.length>1) tiles=tiles.reverse();
-    let placed=[]; let miss=false;
-    G.stage.innerHTML=`
-      <div class="card">
-        <div class="qnum">Câu ${G.i+1}/${G.total} · Sắp xếp thành câu đúng</div>
-        <div class="qvi" style="margin-top:4px">Chạm các từ theo đúng thứ tự. Chạm từ ở trên để bỏ ra.</div>
-        <div class="slots" id="slots"></div>
-        <div class="tiles" id="tiles">${tiles.map((t,n)=>`<button class="tile" data-n="${n}">${esc(t.w)}</button>`).join("")}</div>
-        <div id="fb"></div>
-        <div class="row2" style="margin-top:6px"><button class="next ghost" id="clr">↺ Làm lại</button><button class="next" id="chk">Kiểm tra ✓</button></div>
-      </div>`;
-    const slots=document.getElementById("slots");
-    const tb=[...G.stage.querySelectorAll("#tiles .tile")];
-    const render=()=>{
-      slots.innerHTML=placed.map((n,p)=>`<button class="tile" data-p="${p}">${esc(tiles[n].w)}</button>`).join("");
-      tb.forEach(b=>b.classList.toggle("used",placed.includes(+b.dataset.n)));
-      slots.querySelectorAll(".tile").forEach(b=>b.onclick=()=>{sfx.click();placed.splice(+b.dataset.p,1);slots.classList.remove("bad");render();});
-    };
-    tb.forEach(b=>b.onclick=()=>{ if(b.classList.contains("used"))return; sfx.click(); placed.push(+b.dataset.n); render(); });
-    document.getElementById("clr").onclick=()=>{sfx.click();placed=[];render();};
-    document.getElementById("chk").onclick=()=>{
-      if(placed.length<words.length){ toast("Dùng hết các từ nhé!"); return; }
-      const got=placed.map(n=>tiles[n].w).join(" ");
-      if(got===target){
-        slots.classList.add("ok"); if(!miss) right(); else sfx.ok();
-        speak(target);
-        document.getElementById("chk").disabled=true; document.getElementById("clr").disabled=true;
-        document.getElementById("fb").innerHTML=`<div class="feedback ok">${miss?"Đúng rồi!":pick(PRAISE)}</div>`;
-        setTimeout(()=>{G.i++;setProg();step();},1600);
-      } else {
-        slots.classList.remove("bad"); void slots.offsetWidth; slots.classList.add("bad");
-        if(!miss){ miss=true; wrongLog("Sắp xếp câu",target); } else sfx.bad();
-        const firstWrong = placed.findIndex((n,p)=>tiles[n].w!==words[p]);
-        document.getElementById("fb").innerHTML=`<div class="feedback bad">Chưa đúng! 💡 Câu bắt đầu bằng: <b>${esc(words.slice(0,Math.max(1,firstWrong)).join(" "))}</b> … Thử lại nhé!</div>`;
-      }
-    };
-    render();
-  };
-  step();
-}
-
-/* ================= 7. PICTURE ================= */
-function pictureGame(){
-  const list=shuffle(PICTURE_Q).slice(0,8);
-  shell("picture",list.length); setProg();
-  const sceneHtml=`<div class="scene" role="img" aria-label="Theme park picture">
-    <span class="path"></span>
-    ${SCENE.map(s=>`<span data-w="${esc(s[1])}" style="left:${s[2]}%;top:${s[3]}%;font-size:min(${s[4]}rem, ${s[4]*2.1}vw)">${s[0]}</span>`).join("")}
-  </div><div class="tagline">👆 Chạm vào hình để nghe từ tiếng Anh</div>`;
-  const step=()=>{
-    if(G.i>=G.total) return finish();
-    const [qt,opts]=list[G.i];
-    mcq({qnum:`Câu ${G.i+1}/${G.total} · Look and answer`, pre:sceneHtml, html:esc(qt), sayText:qt, opts:opts.slice(), answer:opts[0], logQ:qt, speakAfter:opts[0]},
-      ()=>{G.i++;setProg();step();});
-    G.stage.querySelectorAll(".scene span[data-w]").forEach(el=>el.onclick=()=>{speak(el.dataset.w);toast(el.dataset.w);});
-  };
-  step();
-}
-
-home();
-})();
-</script>
-
+  <div class="ground" aria-hidden="true"><span>🌳</span><span>🌷</span><span>🎪</span><span>🌼</span><span>🌳</span><span>🎠</span></div>
+</div>
 </body>
 </html>

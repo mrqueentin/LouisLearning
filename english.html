@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Môn Tiếng Anh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@500;700;800&display=swap">
+<style>
+:root{
+  --sky:#bfe6ff; --sky2:#e9f7ff;
+  --ink:#1d2a44; --muted:#55627d; --card:#ffffff; --line:#d7e3f2;
+  --red:#ff5a5f; --orange:#ff9f1c; --yellow:#ffd23f; --green:#2bb673; --blue:#2f80ed; --purple:#8e5cf7; --pink:#ff6fb5; --teal:#14b8a6;
+  --display:'Baloo 2',system-ui,sans-serif; --body:'Nunito',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0;background:linear-gradient(180deg,var(--sky) 0%,var(--sky2) 55%,#f4fbe9 100%) fixed;background-color:var(--sky2);
+  color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.45;-webkit-tap-highlight-color:transparent;
+  padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.wrap{max-width:720px;margin:0 auto}
+.homeback{display:inline-flex;align-items:center;gap:6px;min-height:48px;padding:8px 18px;border-radius:999px;background:var(--card);
+  color:var(--ink);text-decoration:none;font-weight:800;font-size:1.05rem;box-shadow:0 4px 0 rgba(29,42,68,.14)}
+.homeback:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(29,42,68,.14)}
+.homeback:focus-visible,.unit:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.hero{text-align:center;margin:14px 0 20px}
+.hero .big{font-size:56px;line-height:1}
+.hero h1{font-family:var(--display);font-size:clamp(2rem,8vw,3rem);font-weight:800;margin:4px 0 0;line-height:1.05;color:var(--red)}
+.hero p{margin:4px 0 0;color:var(--muted);font-weight:800}
+.units{display:flex;flex-direction:column;gap:14px}
+.unit{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--ink);background:var(--card);border-radius:22px;
+  padding:14px 16px;box-shadow:0 5px 0 rgba(29,42,68,.14);border-left:8px solid var(--c);transition:transform .12s}
+.unit:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(29,42,68,.14)}
+.unit .ic{flex:none;width:68px;height:68px;border-radius:18px;display:grid;place-items:center;font-size:40px;background:#f3f6fb;
+  background:color-mix(in srgb,var(--c) 16%,#fff)}
+.unit .tx{flex:1;min-width:0}
+.unit .no{font-weight:800;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;color:var(--c)}
+.unit h2{font-family:var(--display);font-size:1.5rem;font-weight:800;margin:0;line-height:1.15}
+.unit p{margin:2px 0 0;color:var(--muted);font-weight:700;font-size:.95rem}
+.unit .st{flex:none;text-align:right;font-weight:800;white-space:nowrap}
+.unit .st small{display:block;color:var(--muted);font-weight:700;font-size:.8rem}
+.soon{margin-top:18px;text-align:center;color:var(--muted);font-weight:700;background:rgba(255,255,255,.6);border:2px dashed var(--line);
+  border-radius:18px;padding:14px}
+.ground{margin-top:24px;display:flex;justify-content:space-around;font-size:30px;background:#7ccf6a;border-radius:20px 20px 0 0;padding:8px 6px 4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="homeback" href="index.html">← Chọn môn</a>
+
+  <header class="hero">
+    <div class="big" aria-hidden="true">🔤</div>
+    <h1>Môn Tiếng Anh</h1>
+    <p>Move up 5 · Chọn bài học nhé!</p>
+  </header>
+
+  <main class="units" id="units"></main>
+  <div class="soon">📚 Bài học mới sẽ được thêm sau…</div>
+
+  <div class="ground" aria-hidden="true"><span>🌳</span><span>🌷</span><span>🎪</span><span>🌼</span><span>🌳</span><span>🎠</span></div>
+</div>
+
+<script>
+/* ===== DANH SÁCH BÀI HỌC — thêm bài mới vào cuối danh sách =====
+   unit: số bài · title: tên bài · desc: mô tả ngắn · icon: emoji · color: màu viền
+   file: trang game của bài · saveKey/maxStars: (tuỳ chọn) để hiện số sao đã đạt  */
+const UNITS = [
+  { unit: 5, title: "Theme Park", desc: "Nghề nghiệp, nơi ở, quốc tịch · was/were", icon: "🎡",
+    color: "#ff5a5f", file: "unit5.html", saveKey: "u5park.v1", maxStars: 21 },
+  // { unit: 6, title: "abc", desc: "…", icon: "📘", color: "#2f80ed", file: "unit6.html" },
+  // { unit: 7, title: "xyz", desc: "…", icon: "📗", color: "#2bb673", file: "unit7.html" },
+];
+
+function starsOf(u){
+  if(!u.saveKey) return null;
+  try{
+    const s = JSON.parse(localStorage.getItem(u.saveKey) || "null");
+    if(!s || !s.stars) return 0;
+    return Object.values(s.stars).reduce((a,b)=>a+(+b||0),0);
+  }catch(e){ return null; }
+}
+const esc = t => String(t).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+document.getElementById("units").innerHTML = UNITS.map(u => {
+  const got = starsOf(u);
+  const st = got === null ? "" :
+    `<div class="st">⭐ ${got}${u.maxStars ? " / " + u.maxStars : ""}<small>sao</small></div>`;
+  return `<a class="unit" href="${esc(u.file)}" style="--c:${esc(u.color)}">
+      <div class="ic" aria-hidden="true">${u.icon}</div>
+      <div class="tx">
+        <div class="no">Unit ${u.unit}</div>
+        <h2>${esc(u.title)}</h2>
+        <p>${esc(u.desc)}</p>
+      </div>${st}
+    </a>`;
+}).join("");
+</script>
+</body>
+</html>

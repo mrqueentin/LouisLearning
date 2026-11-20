@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Môn Toán</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@500;700;800&display=swap">
+<style>
+:root{
+  --sky:#bfe6ff; --sky2:#e9f7ff; --ink:#1d2a44; --muted:#55627d; --blue:#2f80ed;
+  --display:'Baloo 2',system-ui,sans-serif; --body:'Nunito',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;
+  background:linear-gradient(180deg,var(--sky) 0%,var(--sky2) 55%,#f4fbe9 100%) fixed;background-color:var(--sky2);
+  color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.45;-webkit-tap-highlight-color:transparent;
+  padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.top{max-width:720px;width:100%;margin:0 auto;display:flex;align-items:center;gap:12px}
+.back{display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:16px;background:#fff;
+  color:var(--ink);text-decoration:none;font-size:1.6rem;font-weight:800;box-shadow:0 4px 0 #c9d8ec}
+.back:active{transform:translateY(3px);box-shadow:0 1px 0 #c9d8ec}
+.top h1{font-family:var(--display);font-size:1.8rem;margin:0;color:var(--blue)}
+main{flex:1;display:flex;align-items:center;justify-content:center}
+.card{max-width:460px;width:100%;background:#fff;border-radius:28px;padding:32px 24px;text-align:center;
+  box-shadow:0 6px 0 #bcd6f7,0 10px 24px rgba(30,60,120,.08)}
+.big{font-size:84px;line-height:1;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px) rotate(-4deg)}}
+@media (prefers-reduced-motion:reduce){.big{animation:none}}
+.card p{font-family:var(--display);font-weight:800;font-size:1.5rem;line-height:1.3;margin:16px 0 22px}
+.btn{display:inline-block;text-decoration:none;font-weight:800;font-size:1.15rem;color:#fff;background:var(--blue);
+  border-radius:999px;padding:12px 28px;box-shadow:0 4px 0 #1f5fb8}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #1f5fb8}
+</style>
+</head>
+<body>
+<div class="top">
+  <a class="back" href="index.html" aria-label="Quay lại chọn môn">←</a>
+  <h1>🔢 Môn Toán</h1>
+</div>
+<main>
+  <div class="card">
+    <div class="big" aria-hidden="true">📚</div>
+    <p>Chưa có nội dung bài học mới, các con thử lại sau nhé!</p>
+    <a class="btn" href="index.html">← Quay lại chọn môn</a>
+  </div>
+</main>
+</body>
+</html>

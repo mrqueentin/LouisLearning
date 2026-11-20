@@ -30,10 +30,17 @@ h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.1}
 .hero h1{font-size:clamp(2rem,7vw,3rem);font-weight:800;color:var(--ink);letter-spacing:-.5px}
 .hero h1 span{color:var(--red)}
 .hero p{margin:4px 0 0;color:var(--muted);font-weight:700}
-.ticket{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--card);border:3px dashed var(--orange);border-radius:18px;padding:12px 14px;margin:8px 0 14px}
-.ticket label{font-weight:800}
-.ticket input{flex:1;min-width:0;font:inherit;font-weight:800;padding:8px 12px;border-radius:12px;border:2px solid var(--line);background:#fbfdff;color:var(--ink)}
+.toprow{display:flex;align-items:center;gap:8px;margin:8px 0 14px}
+.ticket{flex:1;min-width:0;display:flex;align-items:center;gap:10px;background:var(--card);border:3px dashed var(--orange);border-radius:18px;padding:8px 12px}
+.ticket .tinfo{display:flex;flex-direction:column;min-width:0;line-height:1.15}
+.ticket .tlabel{font-weight:800;font-size:.9rem;color:var(--muted);white-space:nowrap}
 .ticket .total{font-family:var(--display);font-size:1.4rem;font-weight:800;white-space:nowrap}
+.homeback{flex:none;display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:6px 14px;border-radius:999px;background:var(--card);color:var(--ink);text-decoration:none;font-weight:800;font-size:1rem;line-height:1.1;text-align:center;box-shadow:0 4px 0 rgba(29,42,68,.14)}
+.homeback:active,.sndbtn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(29,42,68,.14)}
+.homeback:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.sndbtn{flex:none;width:52px;height:52px;border-radius:50%;background:var(--card);font-size:1.5rem;box-shadow:0 4px 0 rgba(29,42,68,.14)}
+.sndbtn.off{background:#e9edf5}
+@media (max-width:380px){.homeback{padding:6px 10px;font-size:.92rem}.ticket{padding:8px}}
 .rides{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .ride{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;padding:14px;border-radius:20px;background:var(--card);box-shadow:0 5px 0 rgba(29,42,68,.14);border:3px solid transparent;transition:transform .12s}
 .ride:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(29,42,68,.14)}
@@ -43,7 +50,6 @@ h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.1}
 .ride small{color:var(--muted);font-weight:700;font-size:.85rem;line-height:1.3}
 .ride .st{position:absolute;top:12px;right:12px;font-size:1rem;letter-spacing:1px}
 .ride .src{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--c)}
-.tools{display:flex;justify-content:center;gap:10px;margin-top:16px;flex-wrap:wrap}
 .chip{padding:8px 14px;border-radius:999px;background:var(--card);font-weight:800;border:2px solid var(--line)}
 .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 .ground{height:46px;margin-top:18px;border-radius:18px 18px 0 0;background:var(--grass);display:flex;align-items:flex-end;justify-content:space-around;font-size:1.8rem;overflow:hidden}
@@ -313,6 +319,10 @@ const KEY = "u5park.v1";
 let save = {name:"", stars:{}, mute:false};
 try{ const s = JSON.parse(localStorage.getItem(KEY)||"null"); if(s) save = Object.assign(save,s); }catch(e){}
 function persist(){ try{ localStorage.setItem(KEY, JSON.stringify(save)); }catch(e){} }
+/* Chạy trong app Android "Vui Học" (bản có thanh hồ sơ + nút âm thanh của app)?
+   → ẩn khung sao & nút âm thanh trong trang, lấy trạng thái âm thanh từ app. */
+const IN_APP = (()=>{ try{ return !!(window.AndroidApp && typeof AndroidApp.isMuted==="function"); }catch(e){ return false; } })();
+if(IN_APP){ try{ save.mute = !!AndroidApp.isMuted(); }catch(e){} }
 
 /* ================= HELPERS ================= */
 const app = document.getElementById("app");
@@ -390,11 +400,20 @@ function home(){
       <h1>Unit 5 <span>Theme Park</span></h1>
       <p>Move up 5 · Unit 5 Lesson 3 + Review 1 · Cambridge Flyers</p>
     </div>
-    <div class="ticket">
-      <label for="nm">🎟️ Tên em:</label>
-      <input id="nm" maxlength="20" placeholder="Nhập tên…" value="${esc(save.name)}">
-      <div class="total" title="Tổng số sao">⭐ ${totalStars()} / ${RIDES.length*3}</div>
-    </div>
+    ${IN_APP ? `
+    <div class="toprow">
+      <a class="homeback" href="english.html">← Bài học</a>
+    </div>` : `
+    <div class="toprow">
+      <a class="homeback" href="english.html">← Bài<br>học</a>
+      <div class="ticket">
+        <div class="tinfo">
+          <span class="tlabel">🎟️ Sao của em</span>
+          <span class="total" title="Tổng số sao">⭐ ${totalStars()} / ${RIDES.length*3}</span>
+        </div>
+      </div>
+      <button class="sndbtn ${save.mute?"off":""}" id="snd" aria-label="${save.mute?"Bật âm thanh":"Tắt âm thanh"}" title="${save.mute?"Âm thanh: tắt":"Âm thanh: bật"}">${save.mute?"🔇":"🔊"}</button>
+    </div>`}
     <div class="rides">
       ${RIDES.map(r=>`
         <button class="ride" data-id="${r.id}" style="--c:${r.c}">
@@ -405,21 +424,10 @@ function home(){
           <small>${r.vi}</small>
         </button>`).join("")}
     </div>
-    <div class="tools">
-      <button class="chip ${save.mute?"":"on"}" id="snd">${save.mute?"🔇 Âm thanh: tắt":"🔊 Âm thanh: bật"}</button>
-      <button class="chip" id="rst">↺ Xóa điểm</button>
-    </div>
-    <div id="rstbox"></div>
     <div class="ground" aria-hidden="true"><span>🌳</span><span>🌷</span><span>🎪</span><span>🌼</span><span>🌳</span><span>🎠</span><span>🌷</span></div>`;
-  document.getElementById("nm").addEventListener("input",e=>{save.name=e.target.value.trim();persist();});
   app.querySelectorAll(".ride").forEach(b=>b.addEventListener("click",()=>{sfx.click(); startRide(b.dataset.id);}));
-  document.getElementById("snd").onclick=()=>{save.mute=!save.mute;persist();home();if(!save.mute)sfx.ok();};
-  document.getElementById("rst").onclick=()=>{
-    const box=document.getElementById("rstbox");
-    box.innerHTML=`<div class="card" style="margin-top:10px;text-align:center"><b>Xóa hết sao đã đạt?</b><div class="row2" style="margin-top:8px"><button class="next ghost" id="no">Không</button><button class="next" id="yes" style="background:var(--bad);box-shadow:0 4px 0 #a52a2e">Xóa</button></div></div>`;
-    document.getElementById("no").onclick=()=>box.innerHTML="";
-    document.getElementById("yes").onclick=()=>{save.stars={};persist();home();toast("Đã xóa điểm");};
-  };
+  const snd=document.getElementById("snd");
+  if(snd) snd.onclick=()=>{save.mute=!save.mute;persist();home();if(!save.mute)sfx.ok();};
   window.scrollTo(0,0);
 }
 
@@ -451,8 +459,7 @@ function finish(){
   const prev = save.stars[G.ride.id]||0;
   if(stars>prev){ save.stars[G.ride.id]=stars; persist(); }
   sfx.win(); confetti();
-  const nm = save.name? `, ${esc(save.name)}`:"";
-  const title = stars===3?`Xuất sắc${nm}!`:stars===2?`Giỏi lắm${nm}!`:`Cố lên${nm}!`;
+  const title = stars===3?`Xuất sắc!`:stars===2?`Giỏi lắm!`:`Cố lên!`;
   G.stage.innerHTML=`
     <div class="card end">
       <div class="stars">${starStr(stars)}</div>
