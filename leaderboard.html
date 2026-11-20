@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Bảng xếp hạng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@500;700;800&display=swap">
+<style>
+:root{
+  --sky:#bfe6ff; --sky2:#e9f7ff;
+  --ink:#1d2a44; --muted:#55627d; --card:#ffffff; --line:#d7e3f2;
+  --red:#ff5a5f; --orange:#ff9f1c; --yellow:#ffd23f; --green:#2bb673; --blue:#2f80ed;
+  --display:'Baloo 2',system-ui,sans-serif; --body:'Nunito',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0;background:linear-gradient(180deg,var(--sky) 0%,var(--sky2) 55%,#f4fbe9 100%) fixed;background-color:var(--sky2);
+  color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.45;-webkit-tap-highlight-color:transparent;
+  padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.wrap{max-width:620px;margin:0 auto}
+.homeback{display:inline-flex;align-items:center;gap:6px;min-height:48px;padding:8px 18px;border-radius:999px;background:var(--card);
+  color:var(--ink);text-decoration:none;font-weight:800;font-size:1.05rem;box-shadow:0 4px 0 rgba(29,42,68,.14)}
+.homeback:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(29,42,68,.14)}
+.homeback:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.hero{text-align:center;margin:12px 0 18px}
+.hero .big{font-size:60px;line-height:1}
+.hero h1{font-family:var(--display);font-size:clamp(2rem,8vw,2.8rem);font-weight:800;margin:2px 0 0;line-height:1.05;color:#e08600}
+.hero p{margin:4px 0 0;color:var(--muted);font-weight:800}
+.board{background:var(--card);border-radius:24px;box-shadow:0 6px 0 rgba(29,42,68,.12);padding:8px;overflow:hidden}
+.row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:16px}
+.row + .row{margin-top:4px}
+.row .rk{flex:none;width:40px;text-align:center;font-family:var(--display);font-weight:800;font-size:1.3rem;color:var(--muted)}
+.row .rk.medal{font-size:1.9rem}
+.row .nm{flex:1;min-width:0;font-weight:800;font-size:1.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .st{flex:none;font-family:var(--display);font-weight:800;font-size:1.3rem;white-space:nowrap}
+.row.top1{background:#fff6d6}
+.row.top2{background:#f1f4f9}
+.row.top3{background:#fdeee3}
+.row.me{outline:3px solid var(--green);outline-offset:-3px;background:#e6f8ee}
+.me-tag{display:inline-block;margin-left:6px;font-size:.75rem;font-weight:800;color:#fff;background:var(--green);border-radius:999px;padding:1px 8px;vertical-align:middle}
+.msg{text-align:center;padding:28px 16px;color:var(--muted);font-weight:800}
+.msg .e{font-size:48px;display:block;margin-bottom:6px}
+.mine{margin:14px 0 0;text-align:center;font-weight:800;color:var(--muted)}
+.mine b{color:var(--ink)}
+.refresh{display:block;margin:16px auto 0;font:inherit;font-weight:800;font-size:1.05rem;color:#fff;background:var(--blue);border:0;border-radius:999px;
+  padding:10px 24px;box-shadow:0 4px 0 #1f5fb8;cursor:pointer}
+.refresh:active{transform:translateY(3px);box-shadow:0 1px 0 #1f5fb8}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="homeback" href="index.html">← Chọn môn</a>
+  <header class="hero">
+    <div class="big" aria-hidden="true">🏆</div>
+    <h1>Bảng xếp hạng</h1>
+    <p>Ai có nhiều sao nhất nào?</p>
+  </header>
+
+  <section class="board" id="board" aria-live="polite"><div class="msg"><span class="e">⏳</span>Đang tải…</div></section>
+  <p class="mine" id="mine"></p>
+  <button class="refresh" id="refresh" type="button">🔄 Tải lại</button>
+</div>
+
+<script src="lessons.js"></script>
+<script>
+const esc = t => String(t).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const board = document.getElementById("board"), mine = document.getElementById("mine");
+const myId = window.VH_deviceId ? VH_deviceId() : "";
+const myName = window.VH_myName ? VH_myName() : "";
+
+function msg(icon, text){ board.innerHTML = `<div class="msg"><span class="e">${icon}</span>${text}</div>`; }
+
+function render(list){
+  if(!list || !list.length){ msg("🌱", "Chưa có bạn nào trên bảng.<br>Hãy học để có sao đầu tiên nhé!"); return; }
+  const medals = ["🥇","🥈","🥉"];
+  board.innerHTML = list.map((r, i) => {
+    const me = r.id === myId;
+    return `<div class="row ${i < 3 ? "top" + (i + 1) : ""} ${me ? "me" : ""}">
+      <div class="rk ${i < 3 ? "medal" : ""}">${i < 3 ? medals[i] : i + 1}</div>
+      <div class="nm">${esc(r.name)}${me ? '<span class="me-tag">em</span>' : ""}</div>
+      <div class="st">⭐ ${r.stars}</div>
+    </div>`;
+  }).join("");
+  const idx = list.findIndex(r => r.id === myId);
+  mine.innerHTML = idx >= 0 ? `Em đang xếp hạng <b>${idx + 1}</b> với <b>⭐ ${list[idx].stars}</b> sao!` : "";
+}
+
+function load(){
+  if(!window.VH_LEADERBOARD_URL){
+    msg("🛠️", "Bảng xếp hạng chưa được cài đặt.<br>Nhờ bố mẹ cài đặt giúp nhé!");
+    return;
+  }
+  msg("⏳", "Đang tải…");
+  const p = myName ? VH_submitScore(true).then(j => (j && j.ok) ? j : VH_fetchLeaderboard())
+                   : VH_fetchLeaderboard();
+  p.then(j => { if(j && j.ok) render(j.list); else throw new Error("bad"); })
+   .catch(() => msg("📶", "Không tải được bảng xếp hạng.<br>Kiểm tra mạng rồi bấm Tải lại nhé!"));
+  if(!myName) mine.textContent = "Mở bằng app Vui Học (đã nhập tên) để có tên em trên bảng.";
+}
+document.getElementById("refresh").onclick = load;
+load();
+</script>
+</body>
+</html>

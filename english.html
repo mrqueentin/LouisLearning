@@ -61,31 +61,16 @@ body{margin:0;background:linear-gradient(180deg,var(--sky) 0%,var(--sky2) 55%,#f
   <div class="ground" aria-hidden="true"><span>🌳</span><span>🌷</span><span>🎪</span><span>🌼</span><span>🌳</span><span>🎠</span></div>
 </div>
 
+<script src="lessons.js"></script>
 <script>
-/* ===== DANH SÁCH BÀI HỌC — thêm bài mới vào cuối danh sách =====
-   unit: số bài · title: tên bài · desc: mô tả ngắn · icon: emoji · color: màu viền
-   file: trang game của bài · saveKey/maxStars: (tuỳ chọn) để hiện số sao đã đạt  */
-const UNITS = [
-  { unit: 5, title: "Theme Park", desc: "Nghề nghiệp, nơi ở, quốc tịch · was/were", icon: "🎡",
-    color: "#ff5a5f", file: "unit5.html", saveKey: "u5park.v1", maxStars: 21 },
-  // { unit: 6, title: "abc", desc: "…", icon: "📘", color: "#2f80ed", file: "unit6.html" },
-  // { unit: 7, title: "xyz", desc: "…", icon: "📗", color: "#2bb673", file: "unit7.html" },
-];
-
-function starsOf(u){
-  if(!u.saveKey) return null;
-  try{
-    const s = JSON.parse(localStorage.getItem(u.saveKey) || "null");
-    if(!s || !s.stars) return 0;
-    return Object.values(s.stars).reduce((a,b)=>a+(+b||0),0);
-  }catch(e){ return null; }
-}
+/* Danh sách bài lấy từ lessons.js (VH_LESSONS) — thêm bài mới ở file đó */
+const UNITS = (window.VH_LESSONS || []).filter(l => l.subject === "english");
 const esc = t => String(t).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 document.getElementById("units").innerHTML = UNITS.map(u => {
-  const got = starsOf(u);
-  const st = got === null ? "" :
-    `<div class="st">⭐ ${got}${u.maxStars ? " / " + u.maxStars : ""}<small>sao</small></div>`;
+  const p = window.VH_progress ? VH_progress(u) : null;
+  const st = !p ? "" :
+    `<div class="st">⭐ ${p.stars} / ${p.maxStars}<small>${p.done < p.total ? `còn ${p.total - p.done} trò` : "xong ✓"}</small></div>`;
   return `<a class="unit" href="${esc(u.file)}" style="--c:${esc(u.color)}">
       <div class="ic" aria-hidden="true">${u.icon}</div>
       <div class="tx">

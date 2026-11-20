@@ -323,6 +323,11 @@ function persist(){ try{ localStorage.setItem(KEY, JSON.stringify(save)); }catch
    → ẩn khung sao & nút âm thanh trong trang, lấy trạng thái âm thanh từ app. */
 const IN_APP = (()=>{ try{ return !!(window.AndroidApp && typeof AndroidApp.isMuted==="function"); }catch(e){ return false; } })();
 if(IN_APP){ try{ save.mute = !!AndroidApp.isMuted(); }catch(e){} }
+/* Báo tiến độ cho app (chấm báo trên avatar): số trò đã có sao / tổng số trò */
+function reportProgress(){
+  try{ if(window.AndroidApp && typeof AndroidApp.reportProgress==="function")
+    AndroidApp.reportProgress(KEY, RIDES.filter(r=>(save.stars[r.id]||0)>0).length, RIDES.length); }catch(e){}
+}
 
 /* ================= HELPERS ================= */
 const app = document.getElementById("app");
@@ -428,6 +433,7 @@ function home(){
   app.querySelectorAll(".ride").forEach(b=>b.addEventListener("click",()=>{sfx.click(); startRide(b.dataset.id);}));
   const snd=document.getElementById("snd");
   if(snd) snd.onclick=()=>{save.mute=!save.mute;persist();home();if(!save.mute)sfx.ok();};
+  reportProgress();
   window.scrollTo(0,0);
 }
 
@@ -458,6 +464,7 @@ function finish(){
   const stars = pct>=.9?3:pct>=.7?2:1;
   const prev = save.stars[G.ride.id]||0;
   if(stars>prev){ save.stars[G.ride.id]=stars; persist(); }
+  reportProgress();
   sfx.win(); confetti();
   const title = stars===3?`Xuất sắc!`:stars===2?`Giỏi lắm!`:`Cố lên!`;
   G.stage.innerHTML=`
