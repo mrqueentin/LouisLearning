@@ -698,6 +698,18 @@ function readingGame(){
 }
 
 /* ================= 6. SENTENCE BUILDER ================= */
+/* Nghĩa tiếng Việt của từng từ trong SENTENCES (hiện khi chạm từ sau lần ghép sai đầu tiên) */
+const WORD_VI = {
+  "what":"cái gì, gì","do":"làm (trợ động từ trong câu hỏi)","you":"bạn","want":"muốn","wants":"muốn","to":"để, đến","be":"là, trở thành",
+  "in":"trong, ở","the":"(mạo từ) cái, người… đó","future":"tương lai","i":"tôi, em","a":"một","pilot":"phi công","why":"tại sao",
+  "vet":"bác sĩ thú y","because":"bởi vì","look":"nhìn (look after = chăm sóc)","after":"sau (look after = chăm sóc)","animals":"động vật",
+  "live":"sống","lives":"sống","flat":"căn hộ","hanoi":"Hà Nội","at":"vào, ở, lúc","weekend":"cuối tuần","go":"đi","swimming":"bơi lội",
+  "surf":"lướt (surf the internet = lướt mạng)","internet":"mạng in-tơ-nét","twice":"hai lần","week":"tuần","where":"ở đâu",
+  "does":"(trợ động từ trong câu hỏi với he/she/it)","your":"của bạn","grandmother":"bà","she":"cô ấy, bà ấy","on":"trên, ở trên",
+  "fifth":"thứ năm (số thứ tự)","floor":"tầng, sàn nhà","like":"thích","reading":"đọc","books":"những quyển sách","yes":"có, vâng",
+  "no":"không","don't":"không (do not)","are":"là, thì, ở","from":"từ, đến từ","my":"của tôi, của em","brother":"anh trai, em trai","doctor":"bác sĩ"
+};
+
 function builderGame(){
   const list=shuffle(SENTENCES).slice(0,6);
   shell("builder",list.length); setProg();
@@ -713,17 +725,25 @@ function builderGame(){
         <div class="qvi" style="margin-top:4px">Chạm các từ theo đúng thứ tự. Chạm từ ở trên để bỏ ra.</div>
         <div class="slots" id="slots"></div>
         <div class="tiles" id="tiles">${tiles.map((t,n)=>`<button class="tile" data-n="${n}">${esc(t.w)}</button>`).join("")}</div>
+        <div id="wm"></div>
         <div id="fb"></div>
         <div class="row2" style="margin-top:6px"><button class="next ghost" id="clr">↺ Làm lại</button><button class="next" id="chk">Kiểm tra ✓</button></div>
       </div>`;
     const slots=document.getElementById("slots");
     const tb=[...G.stage.querySelectorAll("#tiles .tile")];
+    /* Sau lần ghép sai đầu tiên: chạm từ nào thì đọc từ đó + hiện nghĩa tiếng Việt */
+    const wordHelp=w=>{
+      if(!miss) return;
+      const c=w.replace(/[.,?!]/g,"").replace(/’/g,"'"); const vi=WORD_VI[c.toLowerCase()];
+      speak(c);
+      document.getElementById("wm").innerHTML=`<div style="margin-top:8px;padding:8px 12px;border-radius:14px;background:#fff7d6;border:2px dashed #f5b400;color:#3a2a00;font-weight:800;text-align:center">🔊 <b>${esc(c)}</b>${vi?" = "+esc(vi):""}</div>`;
+    };
     const render=()=>{
       slots.innerHTML=placed.map((n,p)=>`<button class="tile" data-p="${p}">${esc(tiles[n].w)}</button>`).join("");
       tb.forEach(b=>b.classList.toggle("used",placed.includes(+b.dataset.n)));
-      slots.querySelectorAll(".tile").forEach(b=>b.onclick=()=>{sfx.click();placed.splice(+b.dataset.p,1);slots.classList.remove("bad");render();});
+      slots.querySelectorAll(".tile").forEach(b=>b.onclick=()=>{sfx.click();wordHelp(b.textContent);placed.splice(+b.dataset.p,1);slots.classList.remove("bad");render();});
     };
-    tb.forEach(b=>b.onclick=()=>{ if(b.classList.contains("used"))return; sfx.click(); placed.push(+b.dataset.n); render(); });
+    tb.forEach(b=>b.onclick=()=>{ if(b.classList.contains("used"))return; sfx.click(); wordHelp(b.textContent); placed.push(+b.dataset.n); render(); });
     document.getElementById("clr").onclick=()=>{sfx.click();placed=[];render();};
     document.getElementById("chk").onclick=()=>{
       if(placed.length<words.length){ toast("Dùng hết các từ nhé!"); return; }
@@ -731,14 +751,14 @@ function builderGame(){
       if(got===target){
         slots.classList.add("ok"); if(!miss) right(); else sfx.ok();
         speak(target);
-        document.getElementById("chk").disabled=true; document.getElementById("clr").disabled=true;
+        document.getElementById("chk").disabled=true; document.getElementById("clr").disabled=true; document.getElementById("wm").innerHTML="";
         document.getElementById("fb").innerHTML=`<div class="feedback ok">${miss?"Đúng rồi!":pick(PRAISE)}</div>`;
         setTimeout(()=>{G.i++;setProg();step();},1600);
       } else {
         slots.classList.remove("bad"); void slots.offsetWidth; slots.classList.add("bad");
         if(!miss){ miss=true; wrongLog("Sắp xếp câu",target); } else sfx.bad();
         const firstWrong = placed.findIndex((n,p)=>tiles[n].w!==words[p]);
-        document.getElementById("fb").innerHTML=`<div class="feedback bad">Chưa đúng! 💡 Câu bắt đầu bằng: <b>${esc(words.slice(0,Math.max(1,firstWrong)).join(" "))}</b> … Thử lại nhé!</div>`;
+        document.getElementById("fb").innerHTML=`<div class="feedback bad">Chưa đúng! 💡 Câu bắt đầu bằng: <b>${esc(words.slice(0,Math.max(1,firstWrong)).join(" "))}</b> … Thử lại nhé!<br>👆 Chạm vào từng từ để nghe phát âm và xem nghĩa tiếng Việt.</div>`;
       }
     };
     render();
