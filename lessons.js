@@ -10,6 +10,8 @@ window.VH_LESSONS = [
     icon: "🎡", color: "#ff5a5f", file: "unit5.html", saveKey: "u5park.v1", games: 7 },
   { subject: "english", unit: 6, title: "My School", desc: "Phòng học, chỉ đường, lớp tiếng Anh · Where is…?",
     icon: "🏫", color: "#2f80ed", file: "unit6.html", saveKey: "u6school.v1", games: 9 },
+  { subject: "english", unit: 7, title: "Free Time", desc: "Hoạt động lúc rảnh, How often…? · Hiện tại đơn (V-s/es)",
+    icon: "🧺", color: "#2bb673", file: "unit7.html", saveKey: "u7free.v1", games: 10 },
   // { subject: "math", unit: 1, title: "xyz", desc: "…", icon: "➕", color: "#2f80ed", file: "math1.html", saveKey: "m1.v1", games: 5 },
 ];
 
