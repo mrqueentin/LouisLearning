@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Đổi quà</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@500;700;800&display=swap">
+<style>
+:root{
+  --sky:#bfe6ff; --sky2:#e9f7ff;
+  --ink:#1d2a44; --muted:#55627d; --card:#ffffff; --line:#d7e3f2;
+  --red:#ff5a5f; --orange:#ff9f1c; --yellow:#ffd23f; --green:#2bb673; --blue:#2f80ed; --purple:#8e5cf7;
+  --display:'Baloo 2',system-ui,sans-serif; --body:'Nunito',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0;background:linear-gradient(180deg,var(--sky) 0%,var(--sky2) 55%,#f4fbe9 100%) fixed;background-color:var(--sky2);
+  color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.45;-webkit-tap-highlight-color:transparent;
+  padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.wrap{max-width:620px;margin:0 auto}
+.homeback{display:inline-flex;align-items:center;gap:6px;min-height:48px;padding:8px 18px;border-radius:999px;background:var(--card);
+  color:var(--ink);text-decoration:none;font-weight:800;font-size:1.05rem;box-shadow:0 4px 0 rgba(29,42,68,.14)}
+.homeback:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(29,42,68,.14)}
+.homeback:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.hero{text-align:center;margin:12px 0 16px}
+.hero .big{font-size:60px;line-height:1}
+.hero h1{font-family:var(--display);font-size:clamp(2rem,8vw,2.8rem);font-weight:800;margin:2px 0 0;line-height:1.05;color:var(--purple)}
+.hero p{margin:4px 0 0;color:var(--muted);font-weight:800}
+.wallet{display:flex;align-items:center;justify-content:center;gap:14px;background:linear-gradient(180deg,#fff3c4,#ffe27a);
+  border-radius:24px;padding:14px 18px;box-shadow:0 6px 0 #e9b800;margin-bottom:20px;text-align:center}
+.wallet .num{font-family:var(--display);font-weight:800;font-size:2.6rem;line-height:1;color:#7a4b00}
+.wallet .lbl{font-weight:800;color:#7a4b00}
+.wallet .sub{font-size:.88rem;font-weight:700;color:#8a6a2a}
+.gifts{display:grid;gap:16px}
+.gift{background:var(--card);border-radius:24px;padding:16px;box-shadow:0 6px 0 var(--shadow),0 10px 24px rgba(30,60,120,.08);
+  border:4px solid transparent}
+.gift.ready{border-color:var(--green)}
+.gift .top{display:flex;align-items:center;gap:14px}
+.gift .ic{flex:none;width:72px;height:72px;border-radius:20px;display:grid;place-items:center;font-size:42px;background:var(--tint)}
+.gift h2{font-family:var(--display);font-size:1.35rem;font-weight:800;margin:0;line-height:1.15}
+.gift .cost{display:inline-block;margin-top:4px;font-weight:800;color:#7a4b00;background:#fff1bf;border-radius:999px;padding:2px 12px}
+.bar{height:16px;border-radius:999px;background:#edf2f8;margin:14px 0 6px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:999px;background:var(--accent);transition:width .6s}
+.gift .note{font-weight:800;color:var(--muted);font-size:.95rem}
+.gift.ready .note{color:var(--green)}
+.redeem{display:block;width:100%;margin-top:10px;min-height:52px;font:inherit;font-family:var(--display);font-weight:800;font-size:1.25rem;
+  color:#fff;background:var(--green);border:0;border-radius:999px;box-shadow:0 4px 0 #1d8a55;cursor:pointer}
+.redeem:active{transform:translateY(3px);box-shadow:0 1px 0 #1d8a55}
+.redeem:disabled{background:#c9d3e0;box-shadow:0 4px 0 #aab6c6;color:#f5f7fa;cursor:default;transform:none}
+.g1{--accent:var(--orange);--tint:#fff0dc;--shadow:#f5d3a6}
+.g2{--accent:var(--blue);--tint:#e2efff;--shadow:#bcd6f7}
+.g3{--accent:var(--purple);--tint:#efe6ff;--shadow:#d4c2f7}
+.hist{margin-top:22px;background:var(--card);border-radius:20px;padding:12px 16px;box-shadow:0 4px 0 rgba(29,42,68,.1)}
+.hist h3{font-family:var(--display);margin:0 0 6px;font-size:1.15rem}
+.hist ul{margin:0;padding-left:20px;color:var(--muted);font-weight:700}
+.hist .empty{color:var(--muted);font-weight:700;margin:0}
+.tip{margin:16px 4px 0;text-align:center;color:var(--muted);font-weight:700;font-size:.92rem}
+/* Hộp xác nhận của bố mẹ */
+.modal{position:fixed;inset:0;background:rgba(20,30,50,.45);display:none;align-items:center;justify-content:center;padding:16px;z-index:10}
+.modal.on{display:flex}
+.box{background:var(--card);border-radius:24px;padding:20px;max-width:400px;width:100%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.25)}
+.box .e{font-size:54px;line-height:1}
+.box h3{font-family:var(--display);font-size:1.45rem;margin:6px 0 4px}
+.box p{margin:0 0 10px;color:var(--muted);font-weight:700}
+.box .q{font-family:var(--display);font-size:1.6rem;font-weight:800;margin:6px 0}
+.box input{width:100%;font:inherit;font-size:1.4rem;font-weight:800;text-align:center;padding:10px;border-radius:14px;border:3px solid var(--line)}
+.box input:focus{outline:none;border-color:var(--blue)}
+.box .err{color:var(--red);font-weight:800;min-height:1.4em;margin:6px 0 0}
+.box .btns{display:flex;gap:10px;margin-top:10px}
+.box button{flex:1;min-height:50px;font:inherit;font-weight:800;font-size:1.1rem;border:0;border-radius:999px;cursor:pointer}
+.box .no{background:#edf2f8;color:var(--ink)}
+.box .yes{background:var(--green);color:#fff}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="homeback" href="index.html">← Chọn môn</a>
+  <header class="hero">
+    <div class="big" aria-hidden="true">🎁</div>
+    <h1>Đổi quà</h1>
+    <p>Học chăm, gom sao, đổi quà thật!</p>
+  </header>
+
+  <section class="wallet" aria-live="polite">
+    <div>
+      <div class="lbl">Em đang có</div>
+      <div class="num">⭐ <span id="avail">0</span></div>
+      <div class="sub" id="sub"></div>
+    </div>
+  </section>
+
+  <main class="gifts" id="gifts"></main>
+
+  <section class="hist">
+    <h3>📜 Quà em đã đổi</h3>
+    <div id="hist"></div>
+  </section>
+
+  <p class="tip">Sao được tính từ tất cả bài học trên máy này.<br>Khi đổi quà, bố mẹ xác nhận và số sao sẽ được trừ đi.</p>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="box">
+    <div class="e" id="mIcon">🎁</div>
+    <h3 id="mTitle">Đổi quà</h3>
+    <p id="mText"></p>
+    <p><b>Bố mẹ xác nhận:</b> trả lời phép tính</p>
+    <div class="q" id="mQ"></div>
+    <input id="mAns" type="number" inputmode="numeric" autocomplete="off" aria-label="Kết quả phép tính">
+    <div class="err" id="mErr"></div>
+    <div class="btns">
+      <button class="no" id="mNo" type="button">Huỷ</button>
+      <button class="yes" id="mYes" type="button">Đổi quà ✓</button>
+    </div>
+  </div>
+</div>
+
+<script src="lessons.js"></script>
+<script>
+/* ===== DANH SÁCH QUÀ — sửa ở đây nếu muốn đổi quà / số sao ===== */
+const REWARDS = [
+  { id: "cash10k", stars: 50,  icon: "💵", name: "10.000 đồng",                              cls: "g1" },
+  { id: "drink",   stars: 200, icon: "🧋", name: "1 ly nước bất kỳ tại cafe Pengium",       cls: "g2" },
+  { id: "ticket",  stars: 500, icon: "🎢", name: "1 vé vào cổng khu vui chơi Tiến Thọ",     cls: "g3" },
+];
+const RKEY = "vh.rewards";   // localStorage: {spent: số sao đã dùng, history:[{id,name,stars,date}]}
+
+const esc = t => String(t).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function loadR(){
+  try { const r = JSON.parse(localStorage.getItem(RKEY) || "null"); if (r && typeof r.spent === "number") return r; } catch (e) {}
+  return { spent: 0, history: [] };
+}
+function saveR(r){ try { localStorage.setItem(RKEY, JSON.stringify(r)); return true; } catch (e) { return false; } }
+
+const total = window.VH_totalStars ? VH_totalStars() : 0;
+let R = loadR();
+const avail = () => Math.max(0, total - R.spent);
+
+function render(){
+  const a = avail();
+  document.getElementById("avail").textContent = a;
+  document.getElementById("sub").textContent = R.spent > 0
+    ? `Tổng đã học được ⭐ ${total} · đã đổi ⭐ ${R.spent}` : `Tổng sao đã học được: ⭐ ${total}`;
+  document.getElementById("gifts").innerHTML = REWARDS.map(g => {
+    const ok = a >= g.stars, pct = Math.min(100, Math.round(a / g.stars * 100));
+    return `<article class="gift ${g.cls} ${ok ? "ready" : ""}">
+      <div class="top">
+        <div class="ic" aria-hidden="true">${g.icon}</div>
+        <div><h2>${esc(g.name)}</h2><span class="cost">⭐ ${g.stars} sao</span></div>
+      </div>
+      <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="${g.stars}" aria-valuenow="${Math.min(a, g.stars)}"><i style="width:${pct}%"></i></div>
+      <div class="note">${ok ? "🎉 Em đủ sao rồi! Nhờ bố mẹ đổi quà nhé." : `Còn thiếu ⭐ ${g.stars - a} sao nữa — cố lên!`}</div>
+      <button class="redeem" type="button" data-id="${g.id}" ${ok ? "" : "disabled"}>${ok ? "🎁 Đổi quà" : "🔒 Chưa đủ sao"}</button>
+    </article>`;
+  }).join("");
+  const h = document.getElementById("hist");
+  h.innerHTML = R.history.length
+    ? "<ul>" + R.history.slice().reverse().map(x => `<li>${esc(x.date)}: ${esc(x.name)} (−⭐ ${x.stars})</li>`).join("") + "</ul>"
+    : `<p class="empty">Chưa đổi quà nào.</p>`;
+}
+
+/* Hộp xác nhận: phép tính đơn giản để chỉ bố mẹ bấm đổi */
+const modal = document.getElementById("modal"), ans = document.getElementById("mAns"), err = document.getElementById("mErr");
+let cur = null, answer = 0;
+function openModal(g){
+  cur = g;
+  const x = 12 + Math.floor(Math.random() * 8), y = 6 + Math.floor(Math.random() * 4);
+  answer = x * y;
+  document.getElementById("mIcon").textContent = g.icon;
+  document.getElementById("mTitle").textContent = g.name;
+  document.getElementById("mText").textContent = `Dùng ⭐ ${g.stars} sao để đổi quà này?`;
+  document.getElementById("mQ").textContent = `${x} × ${y} = ?`;
+  ans.value = ""; err.textContent = "";
+  modal.classList.add("on");
+  setTimeout(() => ans.focus(), 50);
+}
+function closeModal(){ modal.classList.remove("on"); cur = null; }
+document.getElementById("gifts").addEventListener("click", e => {
+  const b = e.target.closest(".redeem");
+  if (!b || b.disabled) return;
+  const g = REWARDS.find(r => r.id === b.dataset.id);
+  if (g && avail() >= g.stars) openModal(g);
+});
+document.getElementById("mNo").onclick = closeModal;
+modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
+function confirmRedeem(){
+  if (!cur) return;
+  if (+ans.value !== answer){ err.textContent = "Chưa đúng, bố mẹ thử lại nhé!"; ans.select(); return; }
+  if (avail() < cur.stars){ closeModal(); return; }
+  const d = new Date();
+  R.spent += cur.stars;
+  R.history.push({ id: cur.id, name: cur.name, stars: cur.stars,
+    date: d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear() });
+  saveR(R);
+  closeModal();
+  render();
+  setTimeout(() => alert("🎉 Đổi quà thành công! Chúc mừng em!"), 100);
+}
+document.getElementById("mYes").onclick = confirmRedeem;
+ans.addEventListener("keydown", e => { if (e.key === "Enter") confirmRedeem(); });
+
+render();
+</script>
+</body>
+</html>

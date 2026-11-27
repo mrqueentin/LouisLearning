@@ -44,9 +44,13 @@ body{margin:0;box-sizing:border-box;display:flex;align-items:center;justify-cont
 .math h2{color:var(--blue)}
 .eng{--accent:var(--red);--tint:#ffe5e6;--shadow:#f6c3c5}
 .eng h2{color:var(--red)}
-.lb{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:18px;text-decoration:none;color:#6b3f00;
+.extras{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.lb{display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;color:#6b3f00;
   background:linear-gradient(180deg,#ffe066,#ffc93c);border-radius:999px;padding:14px 20px;font-family:var(--display);font-weight:800;
-  font-size:1.45rem;box-shadow:0 5px 0 #e0a100,0 10px 20px rgba(224,161,0,.18)}
+  font-size:1.35rem;white-space:nowrap;box-shadow:0 5px 0 #e0a100,0 10px 20px rgba(224,161,0,.18)}
+.lb.gift{color:#fff;background:linear-gradient(180deg,#b388ff,#8e5cf7);box-shadow:0 5px 0 #6a3fd0,0 10px 20px rgba(106,63,208,.18)}
+.lb.gift:active{box-shadow:0 1px 0 #6a3fd0}
+@media (max-width:380px){.lb{font-size:1.15rem;padding:12px 10px}}
 .lb:active{transform:translateY(4px);box-shadow:0 1px 0 #e0a100}
 .lb:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 .lb .cup{font-size:1.7rem;line-height:1}
@@ -85,7 +89,10 @@ body{margin:0;box-sizing:border-box;display:flex;align-items:center;justify-cont
     </a>
   </main>
 
-  <a class="lb" href="leaderboard.html"><span class="cup" aria-hidden="true">🏆</span> Bảng xếp hạng</a>
+  <nav class="extras">
+    <a class="lb" href="leaderboard.html"><span class="cup" aria-hidden="true">🏆</span> Xếp hạng</a>
+    <a class="lb gift" href="reward.html"><span class="cup" aria-hidden="true">🎁</span> Đổi quà</a>
+  </nav>
 
   <div class="ground" aria-hidden="true"><span>🌳</span><span>🌷</span><span>🎪</span><span>🌼</span><span>🌳</span><span>🎠</span></div>
 </div>
