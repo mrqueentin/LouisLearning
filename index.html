@@ -79,7 +79,7 @@ body{margin:0;box-sizing:border-box;display:flex;align-items:center;justify-cont
         <span class="go">Vào học ➜</span>
       </div>
     </a>
-    <a class="subject eng" href="english.html">
+    <a class="subject eng" href="english.html" onclick="this.href='english.html?t='+Date.now()">
       <div class="ic" aria-hidden="true">🔤</div>
       <div>
         <h2>Môn Tiếng Anh</h2>
@@ -96,7 +96,7 @@ body{margin:0;box-sizing:border-box;display:flex;align-items:center;justify-cont
 
   <div class="ground" aria-hidden="true"><span>🌳</span><span>🌷</span><span>🎪</span><span>🌼</span><span>🌳</span><span>🎠</span></div>
 </div>
-<script src="lessons.js"></script>
+<script>/* Luôn tải lessons.js mới nhất (tránh app/trình duyệt dùng bản cũ trong bộ nhớ đệm) */document.write('<script src="lessons.js?t='+Date.now()+'"><\/script>');</script>
 <script>
 /* Thu nhỏ nội dung cho vừa chiều cao màn hình (không phóng to quá cỡ gốc) */
 (function(){

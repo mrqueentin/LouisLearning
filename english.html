@@ -24,6 +24,10 @@ body{margin:0;background:linear-gradient(180deg,var(--sky) 0%,var(--sky2) 55%,#f
   color:var(--ink);text-decoration:none;font-weight:800;font-size:1.05rem;box-shadow:0 4px 0 rgba(29,42,68,.14)}
 .homeback:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(29,42,68,.14)}
 .homeback:focus-visible,.unit:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.refresh{border:0;font:inherit;cursor:pointer}
+.refresh.spin span{display:inline-block;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 .hero{text-align:center;margin:14px 0 20px}
 .hero .big{font-size:56px;line-height:1}
 .hero h1{font-family:var(--display);font-size:clamp(2rem,8vw,3rem);font-weight:800;margin:4px 0 0;line-height:1.05;color:var(--red)}
@@ -47,7 +51,10 @@ body{margin:0;background:linear-gradient(180deg,var(--sky) 0%,var(--sky2) 55%,#f
 </head>
 <body>
 <div class="wrap">
-  <a class="homeback" href="./">← Chọn môn</a>
+  <div class="topbar">
+    <a class="homeback" href="./">← Chọn môn</a>
+    <button class="homeback refresh" id="refresh" type="button" aria-label="Tải lại bài học mới"><span aria-hidden="true">🔄</span> Tải lại</button>
+  </div>
 
   <header class="hero">
     <div class="big" aria-hidden="true">🔤</div>
@@ -80,6 +87,16 @@ document.getElementById("units").innerHTML = UNITS.map(u => {
       </div>${st}
     </a>`;
 }).join("");
+/* Nút Tải lại: xoá bộ nhớ đệm của trình duyệt/app rồi mở lại trang này bản mới nhất */
+document.getElementById("refresh").onclick = async function () {
+  this.classList.add("spin"); this.disabled = true;
+  try {
+    if (window.caches) { const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); }
+    await Promise.all(["english.html", "lessons.js", "./"].concat(UNITS.map(u => u.file))
+      .map(f => fetch(f, { cache: "reload" }).catch(() => {})));
+  } catch (e) {}
+  location.replace("english.html?t=" + Date.now());
+};
 </script>
 </body>
 </html>
