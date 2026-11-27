@@ -12,6 +12,8 @@ window.VH_LESSONS = [
     icon: "🏫", color: "#2f80ed", file: "unit6.html", saveKey: "u6school.v1", games: 9 },
   { subject: "english", unit: 7, title: "Free Time", desc: "Hoạt động lúc rảnh, How often…? · Hiện tại đơn (V-s/es)",
     icon: "🧺", color: "#2bb673", file: "unit7.html", saveKey: "u7free.v1", games: 10 },
+  { subject: "english", unit: 8, title: "Science Class", desc: "Hoạt động trong lớp, bảo tàng khoa học · don't/doesn't, Do/Does…?",
+    icon: "🚀", color: "#8e5cf7", file: "unit8.html", saveKey: "u8class.v1", games: 9 },
   // { subject: "math", unit: 1, title: "xyz", desc: "…", icon: "➕", color: "#2f80ed", file: "math1.html", saveKey: "m1.v1", games: 5 },
 ];
 

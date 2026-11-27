@@ -61,7 +61,7 @@ body{margin:0;background:linear-gradient(180deg,var(--sky) 0%,var(--sky2) 55%,#f
   <div class="ground" aria-hidden="true"><span>🌳</span><span>🌷</span><span>🎪</span><span>🌼</span><span>🌳</span><span>🎠</span></div>
 </div>
 
-<script src="lessons.js"></script>
+<script>/* Luôn tải lessons.js mới nhất (tránh app/trình duyệt dùng bản cũ trong bộ nhớ đệm) */document.write('<script src="lessons.js?t='+Date.now()+'"><\/script>');</script>
 <script>
 /* Danh sách bài lấy từ lessons.js (VH_LESSONS) — thêm bài mới ở file đó */
 const UNITS = (window.VH_LESSONS || []).filter(l => l.subject === "english");
@@ -71,7 +71,7 @@ document.getElementById("units").innerHTML = UNITS.map(u => {
   const p = window.VH_progress ? VH_progress(u) : null;
   const st = !p ? "" :
     `<div class="st">⭐ ${p.stars} / ${p.maxStars}<small>${p.done < p.total ? `còn ${p.total - p.done} trò` : "xong ✓"}</small></div>`;
-  return `<a class="unit" href="${esc(u.file)}" style="--c:${esc(u.color)}">
+  return `<a class="unit" href="${esc(u.file)}?t=${Date.now()}" style="--c:${esc(u.color)}">
       <div class="ic" aria-hidden="true">${u.icon}</div>
       <div class="tx">
         <div class="no">Unit ${u.unit}</div>

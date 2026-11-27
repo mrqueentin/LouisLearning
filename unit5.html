@@ -413,10 +413,10 @@ function home(){
     </div>
     ${IN_APP ? `
     <div class="toprow">
-      <a class="homeback" href="english.html">← Bài học</a>
+      <a class="homeback" href="english.html?t=${Date.now()}">← Bài học</a>
     </div>` : `
     <div class="toprow">
-      <a class="homeback" href="english.html">← Bài<br>học</a>
+      <a class="homeback" href="english.html?t=${Date.now()}">← Bài<br>học</a>
       <div class="ticket">
         <div class="tinfo">
           <span class="tlabel">🎟️ Sao của em</span>
